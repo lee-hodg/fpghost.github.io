@@ -13,11 +13,13 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: Lee's Blog
+title: Lee's Notebook
 email: lee@logicon.io
+url: "https://blog.logicon.io"
+repository: "fpghost/fpghost.github.io"
 description: >- # this means to ignore newlines until "baseurl:"
   Just another blog about data science, ML, AI, Statistics, Physics,
-  Python, Django, Freelancing, Web Scraping etc
+  Python, Django, Freelancing, Web Scraping
 github_username: fpghost
 minimal_mistakes_skin: dark
 search: true
@@ -59,22 +61,10 @@ author:
   name   : "Lee H"
   avatar : "/assets/images/bio-photo.jpg"
   bio    : "PhD Physicist. Travel. Data science"
-  links:
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/fpghost"
-    - label: "Instagram"
-      icon: "fab fa-fw fa-instagram"
-      url: "https://instagram.com/@pachapoppa"
+  location: "Rio, Brazil"
+  github : fpghost
+  linkedin: peterewills
 
-footer:
-  links:
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/fpghost"
-    - label: "Instagram"
-      icon: "fab fa-fw fa-instagram"
-      url: "https://instagram.com/@pachapoppa"
 
 defaults:
   # _posts
