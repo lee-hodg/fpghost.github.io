@@ -5,7 +5,11 @@ categories:
 tags:
   - math
   - statistics
+toc: true
+toc_sticky: true
 ---
+
+
 
 # Bernoulli
 
