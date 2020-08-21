@@ -6,6 +6,13 @@ categories:
 tags:
   - Trading
   - Betting
+header:
+  overlay_image: /assets/images/vegas.jpg
+  overlay_filter: 0.5 # same as adding an opacity of 0.5 to a black background
+  caption: "Optimal bet sizing"
+  actions:
+    - label: "More Info"
+      url: "https://en.wikipedia.org/wiki/Kelly_criterion"
 ---
 
 
