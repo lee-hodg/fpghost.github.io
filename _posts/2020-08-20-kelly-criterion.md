@@ -1,5 +1,5 @@
 ---
-title: "Kelly Crilcome"
+title: "Kelly Criterion"
 date: 2020-08-20T20:00:00
 categories:
   - blog
