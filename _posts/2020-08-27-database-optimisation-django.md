@@ -211,7 +211,6 @@ If you use [Runserverplus](https://django-extensions.readthedocs.io/en/latest/ru
 You could also commit to logging all slow SQL queries with a logging filter
 
 ```
-{% highlight python linenos %} 
 
 # settings.py
 
@@ -235,18 +234,9 @@ LOGGING = {
             '()': SlowQueriesFilter,
         },
     },
-    'formatters': {
-        'verbose': {
-            'format': '%(asctime)s %(module)s[%(process)d] %(levelname)s -- %(message)s',
-        }
-    },
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-        }
-    },
+.
+.
+.
     'loggers': {
         'django.db.backends': {
             'handlers': ['console'],
@@ -256,8 +246,9 @@ LOGGING = {
 
     }
 }
-{% endhighlight %}
 ```
+
+
 Another useful tool is [Django-debug-toolbar](https://django-debug-toolbar.readthedocs.io/en/latest/), which will show you how many SQL queries and a breakdown of them for each view.
 
 The downside is that this only works in a browser, but for `GET` API endpoints, if you execute them in a browser you can still use this tool for performance insights.
