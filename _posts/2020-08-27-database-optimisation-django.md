@@ -40,6 +40,7 @@ for artist in artists:
     artwork = artist.artworks.first()
     if artwork is not None:
         print(artwork.title)
+{% endhighlight %}
 ```
 
 How many database queries would you expect?
@@ -71,7 +72,7 @@ WHERE ("artwork_artwork"."artist_id" = '069d5b3c-3fa4-4236-a054-13b73183ac49'::u
 .
 .
 .
-
+{% endhighlight %}
 ```
 
 Here first we have the 1 `Artist` lookup and then the ensuing `N` related `Artwork` lookups (another database hit per artist)
@@ -91,6 +92,7 @@ for artist in artists:
     artwork = artist.artworks.first()
     if artwork is not None:
         print(artwork.title)
+{% endhighlight %}
 ```
 
 and observe the SQL queries in the shell, we'd now see
@@ -108,7 +110,7 @@ SELECT "artwork_artwork"."id",
        "artwork_artwork"."title"
 FROM "artwork_artwork"
  WHERE ("artwork_artwork"."artist_id" IN ('5e9eceb7-5d4e-419a-a5e6-cb96b6e1fcca'::uuid, '069d5b3c-3fa4-4236-a054-13b73183ac49'::uuid, 'b202cfbd-c34b-4453-8d96-d00c314655c1'::uuid, 'dc1497c4-cf71-4b29-bcd4-dc1ba1836f3f'::uuid, '5f2b5604-f204-4130-a7a4-529f435a11cc'::uuid))
-
+{% endhighlight %}
 ```
 
 So now we have just 2 SQL queries! No matter how many users in our database. This is a lot better than `N+1`
@@ -148,6 +150,7 @@ WHERE "artist"."id" = '034544ed-a262-4c86-a061-47891daf2824'::uuid
 .
 .
 .
+{% endhighlight %}
 ```
 
 To avoid this issue, Django provides us with `select_related`
@@ -171,6 +174,7 @@ artworks = Artwork.objects.select_related('artist').all()
   FROM "artwork_artwork"
  INNER JOIN "artist"
     ON ("artwork_artwork"."artist_id" = "artist"."id")
+{% endhighlight %}
 ```
 
 # Use with DRF
@@ -193,6 +197,7 @@ class ArtistViewSet(viewsets.ModelViewSet):
         qs = Artist.objects.select_related('auth_token')\
             .prefetch_related('artworks')
         return qs
+{% endhighlight %}
 ```
 
 
@@ -251,6 +256,7 @@ LOGGING = {
 
     }
 }
+{% endhighlight %}
 ```
 Another useful tool is [Django-debug-toolbar](https://django-debug-toolbar.readthedocs.io/en/latest/), which will show you how many SQL queries and a breakdown of them for each view.
 
