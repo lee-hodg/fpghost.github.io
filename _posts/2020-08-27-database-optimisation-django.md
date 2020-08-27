@@ -142,8 +142,7 @@ WHERE "artist"."id" = '034544ed-a262-4c86-a061-47891daf2824'::uuid
 To avoid this issue, Django provides us with `select_related`
 
 
-```
-{% highlight python linenos %} 
+```python
 artworks = Artwork.objects.select_related('artist').all()
  ```
 
