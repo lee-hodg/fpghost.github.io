@@ -148,7 +148,7 @@ Now also notice that by the law of large numbers
 
 $$\bar{X}_n \xrightarrow[n \to \infty]{\mathbb{P}} \mu$$
 
-That means that $\bar{X}_n$ and $\mu|$ are being squeezed together, and it also means that the number $c_{\bar{X}_n}$ is going to head toward $\mu$ as $n$ gets larger and larger. More formally, we could make an argument in convergence of probability. Since
+That means that $\bar{X}_n$ and $\mu$ are being squeezed together, and it also means that the number $c_{\bar{X}_n}$ is going to head toward $\mu$ as $n$ gets larger and larger. More formally, we could make an argument in convergence of probability. Since
 
 $$
 |C_{\bar{X}_n}-\mu| < \left|\bar{X}_n - \mu \right|
