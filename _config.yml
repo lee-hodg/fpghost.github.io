@@ -64,6 +64,10 @@ author:
   location: "Rio, Brazil"
   github : fpghost
   linkedin: lee-hodgkinson-681607161
+  links:
+    - label: "Google Scholar"
+      icon: "fab fa-fw fa-graduation-cap"
+      url: "https://scholar.google.com/citations?hl=en&user=OyS2UFYAAAAJ"
 
 
 defaults:
