@@ -166,7 +166,10 @@ $$
 Finally, applying the (multivariate) Slutsky theorem to the sum of the two terms gives:
 
 $$
-\displaystyle  \nabla \mathbf{g}(\vec{\theta })^ T \left(\sqrt{n}\left(\mathbf{T}_ n - \vec{\theta }\right)\right) + \left\|  \sqrt{n}\left(\mathbf{T}_ n - \vec{\theta }\right) \right\| \, \mathbf{u}(\mathbf{T}_ n)\xrightarrow [n\to \infty ]{(d)}\nabla \mathbf{g}(\vec{\theta })^ T \mathbf{T}+ \mathbf{0}\, =\, \nabla \mathbf{g}(\vec{\theta })^ T \mathbf{T}.
+\begin{aligned}
+\displaystyle  \nabla \mathbf{g}(\vec{\theta })^ T \left(\sqrt{n}\left(\mathbf{T}_ n - \vec{\theta }\right)\right) &+ \left\|  \sqrt{n}\left(\mathbf{T}_ n - \vec{\theta }\right) \right\| \, \mathbf{u}(\mathbf{T}_ n)\\
+&\xrightarrow [n\to \infty ]{(d)}\nabla \mathbf{g}(\vec{\theta })^ T \mathbf{T}+ \mathbf{0}\, =\, \nabla \mathbf{g}(\vec{\theta })^ T \mathbf{T}.
+\end{aligned}
 $$
 
 and we have
@@ -176,9 +179,25 @@ $$
 $$
 
 
-### Applying this to the sample average
+## Applying this to the sample average
 
-If now $\mathbf{T}_n=\bar{\mathbf{X}}_n$, the sample average, and $\, \vec{\theta }=\mathbb E[\mathbf{X}].\, \,$, then the multivariate CLT gives $\mathbf{T}\sim \mathcal{N}_d(\mathbf{0}, \Sigma_{\mathbf{X}})$, and so in this case the delta method gives
+If now 
+
+$$\mathbf{T}_n=\bar{\mathbf{X}}_n$$
+
+the sample average, and 
+
+$$
+\, \vec{\theta }=\mathbb E[\mathbf{X}].\, \,
+$$
+
+then the multivariate CLT gives 
+
+$$
+\mathbf{T}\sim \mathcal{N}_d(\mathbf{0}, \Sigma_{\mathbf{X}})
+$$
+
+and so in this case the delta method gives
 
 $$
 \begin{aligned}
