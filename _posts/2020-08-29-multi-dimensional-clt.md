@@ -125,3 +125,109 @@ $$
 as you can see this is $(k \times d) \times (d \times d) \times (d \times k)=(k \times k)$ dimensional as expected.
 
 It is the analogy for the univariate $\text{var}(aX)=a^2 \text{var}(X)$ rule we had.
+
+## Diagonalization of the covariance matrix
+
+We know that the covariance matrix is symmetric, $\Sigma=\Sigma^T$, since covariance itself is a symmetric operation $\text{cov}(X, Y) = \text{cov}(Y, X)$
+
+We could diagonalize $\Sigma$ by transforming into a basis of its eigenvectors. 
+
+$$
+\mathbf{D} = \mathbf{U}\Sigma\mathbf{U}^T
+$$
+
+where here $\mathbf{U}$ is an orthogonal matrix ($\mathbf{U}\mathbf{U}^T=\mathbf{U}^T\mathbf{U}=\mathbf{I}$) which has the eigenvectors of $\Sigma$ for its rows.
+
+This also means we can write
+
+
+$$
+\Sigma = \mathbf{U}^T\mathbf{D}\mathbf{U}
+$$
+
+## Multivariate CLT
+
+With that background out of the way, let's consider how the CLT would look in multidimensions.
+
+Remember in the univariate case the CLT looked like
+
+$$
+\sqrt{n}\frac{(X_n - \mu)}{\sqrt{\sigma^2}} \xrightarrow[n \to \infty]{(d)} \mathcal{N}(0, 1)
+$$
+
+so it probably wouldn't be a bad guess to expect that the vector version will look like
+
+
+$$
+\sqrt{n}\Sigma^{-1/2} (\mathbf{X}_n - \mathbf{\mu})\xrightarrow[n \to \infty]{(d)} \mathcal{N}_d(\mathbf{0}, \mathbf{I}_{d\times d})
+$$
+
+with $\mathcal{N}_d (\mathbf{0}, \mathbf{I}_{d\times d})$ being the $d$-dimensional standard Normal distribution.
+
+The tricky thing is that convergence in distribution of a random vector **is not** implied by convergence in each of its components as you might have guessed.
+
+A sequence of random vectors $\mathbf{T}_1, \mathbf{T}_2, \dots, \mathbf{T}_n$ in $\in \mathbb{R}^d$ converges to a random vector $\mathbf{T}$ if
+
+
+$$
+\mathbf{v}^T \mathbf{T}_n \xrightarrow[n \to \infty]{(d)} \mathbf{v}^T \mathbf{T}\,\,\,\, , \forall\, \mathbf{v}\in \mathbb{R}^d
+$$
+
+The sequence $(\mathbf{T}_n)_{n\ge 1}$ only converges if its dot product with *any* constant vector $\mathbf{v}$ converges in distribution.
+
+
+## Univariate CLT implies multivariate CLT
+
+Let $\mathbf{v} \in \mathbb{R}^d$ and $Y_i = \mathbf{v}^T\mathbf{X}_i$ (remember the subscript refrs to a vector observation, not a component in the vector).
+
+This means $Y_i$ will be a scalar random variable. It has mean and variance
+
+$$
+\mathbb{E}[Y] = \mathbf{v}^T \mathbb{E}[\mathbf{X}]
+$$
+
+and as we showed in the affine transformations section (only now with $\mathbf{A}=\mathbf{v}^T)$, the variance of $Y$ is
+
+$$
+\Sigma_{Y}=\mathbf{v}^T\Sigma_{\mathbf{X}}\mathbf{v}
+$$
+
+This is $(1\times d)\times (d \times d) \times (d \times 1)$ and is therefore just $1\times 1$ scalar, the variance of the univariate $Y$, or $\sigma_{Y}^2$.
+
+Hence $(Y_n)_{n\ge 1}$ will satisfy the univariate CLT (note we are looking now at the sample mean of $Y$):
+
+$$
+\sqrt{n}(\bar{Y}_n - \mathbf{v}^T\mathbf{\mu}_{\mathbf{X}}) \xrightarrow[n \to \infty]{(d)} \mathcal{N}(0, \mathbf{v}^T\Sigma_{\mathbf{X}}\mathbf{v})
+$$
+
+However consider what we have on the right-hand side here. If we have a multivariate Gaussian variable $\mathbf{Z}\sim \mathcal{N}_d(\mathbf{0}, \Sigma_{\mathbf{X}})$, then for any constant vector $\mathbf{v} \in \mathbb{R}^d$ we have that $\mathbf{v}^T \mathbf{Z}$ is a univariate Gaussian (this was the definition of the multivariate Gaussian in fact). As per the discussion in the affine section, $\mathbf{v}^T \mathbf{Z}$ would have variance $\mathbf{v}^T\Sigma_{\mathbf{X}}\mathbf{v}$, so we have that
+$\mathbf{v}^T \mathbf{Z} \sim \mathcal{N}(0, \mathbf{v}^T\Sigma_{\mathbf{X}}\mathbf{v})$  (univariate normal). This is exactly the thing our $\bar{Y}_n$ converges in distribution to.
+
+$$
+\sqrt{n}(\bar{Y}_n - \mathbf{v}^T\mathbf{\mu}_{\mathbf{X}}) \xrightarrow[n \to \infty]{(d)} \mathbf{v}^T\mathcal{N}_d (\mathbf{0}, \Sigma_{\mathbf{X}})
+$$
+
+
+Finally we can also write
+
+$$
+\begin{aligned}
+\bar{Y}_n &= \frac{1}{n}\sum_{i=1}^n Y_i\\
+&= \frac{1}{n}\sum_{i=1}^n \mathbf{v}^T \mathbf{X}_i\\
+&=\frac{1}{n}\mathbf{v}^T \left(\sum_{i=1}^n \mathbf{X}_i\right)\\
+&=\mathbf{v}^T \bar{\mathbf{X}}_n
+\end{aligned}
+$$
+
+So we have
+
+$$
+\mathbf{v}^T\sqrt{n}(\bar{X}_n - \mathbf{\mu}_{\mathbf{X}}) \xrightarrow[n \to \infty]{(d)} \mathbf{v}^T\mathcal{N}_d(\mathbf{0}, \Sigma_{\mathbf{X}})
+$$
+
+which by [Slutsky's theorem](https://en.wikipedia.org/wiki/Slutsky%27s_theorem) let's us conclude
+
+
+$$
+\sqrt{n}(\bar{X}_n - \mathbf{\mu}_{\mathbf{X}}) \xrightarrow[n \to \infty]{(d)} \mathcal{N}_d(\mathbf{0}, \Sigma_{\mathbf{X}})
+$$
