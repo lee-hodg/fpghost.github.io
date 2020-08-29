@@ -106,7 +106,7 @@ Hopefully this image provides some geometric intuition for the mean value theore
 <img src="/assets/images/mvt.png" alt="Mean value theorem" class="full">
 
 
-It's really just saying that if a function connects 2 points, then at *some* point(s) between them the gradient of that function will have to equal the gradient of straight line connecting those points. It doesn't tell us what that point is, only that it must exist.
+It's really just saying that if a function connects 2 points, then at *some* point(s) between them the gradient of that function will have to equal the gradient of the straight line connecting those points. It doesn't tell us what that point is, only that it must exist.
 
 Similarly if $z<\theta$
 
