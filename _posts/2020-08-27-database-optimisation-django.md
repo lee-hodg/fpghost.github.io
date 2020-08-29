@@ -186,7 +186,7 @@ class ArtistViewSet(viewsets.ModelViewSet):
 
 ### Runserver plus and shell plus
 
-If you use [Runserverplus](https://django-extensions.readthedocs.io/en/latest/runserver_plus.html) then you develop locally with the `--print-sql` switch, which is very useful when trying to check what database queries are being made by each view. Simiarly with `shell_plus --print-sql`
+If you use [Runserverplus](https://django-extensions.readthedocs.io/en/latest/runserver_plus.html) then you develop locally with the `--print-sql` switch, which is very useful when trying to check what database queries are being made by each view. Similarly with `shell_plus --print-sql`
 
 You could also commit to logging all slow SQL queries with a logging filter
 
@@ -229,4 +229,4 @@ LOGGING = {
 
 Another useful tool is [Django-debug-toolbar](https://django-debug-toolbar.readthedocs.io/en/latest/), which will show you how many SQL queries and a breakdown of them for each view.
 
-The downside is that this only works in a browser, but for `GET` API endpoints, if you execute them in a browser you can still use this tool for performance insights.
+The downside is that this only works in a browser, but for `GET` API endpoints if you execute them in a browser you can still use this tool for performance insights.

@@ -118,7 +118,7 @@ $$
 \mathbb{E}(X^2) = \sum_{k=0}^{\infty} k^2 \frac{\lambda^k}{k!}e^{-\lambda}
 $$
 
-We can drop the zeroth term and pull out a factors again
+We can drop the zeroth term and pull out factors again
 
 $$
 \mathbb{E}(X^2) = \lambda e^{-\lambda} \sum_{k=1}^{\infty} k \frac{\lambda^{k-1}}{(k-1)!}
@@ -130,7 +130,7 @@ $$
 \mathbb{E}(X^2) = \lambda e^{-\lambda} \left( \sum_{k=1}^{\infty} (k-1) \frac{\lambda^{k-1}}{(k-1)!}+\sum_{k=1}^{\infty}  \frac{\lambda^{k-1}}{(k-1)!}\right)
 $$
 
-Drop the first term of the first sum since it's zero cancel the factors from numerator and denom 
+Drop the first term of the first sum since it's zero cancel the factors from numerator and denominator
 
 $$
 \mathbb{E}(X^2) = \lambda e^{-\lambda} \left( \lambda \sum_{k=2}^{\infty} \frac{\lambda^{k-2}}{(k-2)!}+\sum_{k=1}^{\infty}  \frac{\lambda^{k-1}}{(k-1)!}\right)
@@ -142,7 +142,7 @@ $$
 \mathbb{E}(X^2) = \lambda e^{-\lambda} \left( \lambda \sum_{l=0}^{\infty} \frac{\lambda^{l}}{l!}+\sum_{m=0}^{\infty}  \frac{\lambda^{m}}{m!}\right)
 $$
 
-and note these syms are the expansion of $e^{\lambda}$ again
+and note these sums are the expansion of $e^{\lambda}$ again
 
 $$
 \mathbb{E}(X^2) = \lambda e^{-\lambda} \left( \lambda e^{\lambda}+e^{\lambda}\right)=\lambda^2+\lambda

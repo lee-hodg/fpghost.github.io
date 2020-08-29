@@ -39,7 +39,7 @@ $$
 \end{aligned}
 $$
 
-Here all we did was seperated out the cross terms and then used linearity of expectations ($\mathbb{E}[aX+bY]=a\mathbb{E}[X]+b\mathbb{E}[Y]$)
+Here all we did was separated out the cross-terms and then used linearity of expectations ($\mathbb{E}[aX+bY]=a\mathbb{E}[X]+b\mathbb{E}[Y]$)
 
 Next, remembering that if $i\ne j$, then variables are all independent, so e.g. $\mathbb{E}[X_1 X_2]= \mathbb{E}[X_1]\mathbb{E}[X_2]$, but generally $\mathbb{E}[X_1^2] \ne (\mathbb{E}[X_1])^2$ since obviously $X_1$ is not independent from itself, and let's denote the common 2nd moment of the random variables as $\mu_{XX} = \mathbb{E}(X_{i}^2)$:
 

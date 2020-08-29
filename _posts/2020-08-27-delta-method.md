@@ -13,12 +13,12 @@ tags:
 ## Review of the CLT
 
 
-If we have some random variables $X_1, \dots, X_n$, which are all i.i.d (independent and indentically distributed), and have common population mean $\mu$, and population variance $\sigma^2$, and we consider the sample mean
+If we have some random variables $X_1, \dots, X_n$, which are all i.i.d (independent and identically distributed), and have a common population mean $\mu$, and population variance $\sigma^2$, and we consider the sample mean
 
 $$\bar{X}_n = \frac{1}{n} \sum_{i=1}^n X_i$$
 
 
-The Central Limit Theorem (CLT) tells us that the sum of those variables, and therefore the sample mean will tend to a Guassian random variable as $n \to \infty$,  
+The Central Limit Theorem (CLT) tells us that the sum of those variables, and therefore the sample mean will tend to a Gaussian random variable as $n \to \infty$,  
 
 $$\bar{X}_n \stackrel{(d)}{\to} \mathcal{N}$$
 
@@ -57,14 +57,14 @@ $$
 $$
 
 
-So if we take our $\bar{X}_n$ remove its mean and rescale by the squareroot of its variance, we will have convergence (in distribution) to a **standard** Guassian as $n \to \infty$
+So if we take our $\bar{X}_n$ remove its mean and rescale by the square-root of its variance, we will have convergence (in distribution) to a **standard** Gaussian as $n \to \infty$
 
 
 $$
 Z_n = \frac{\bar{X}_n - \mu}{\sqrt{\sigma^2/n}} \xrightarrow[n \to \infty]{(d)} \mathcal{N}(0, 1)
 $$
 
-(Note the square root is there because $\text{var}(aX)=a^2\text{var}(X)$, so the constant in the denominator will end up being squared, and things all work out to ensure $Z_n$ has variance of $1$, as is easy to check.
+(Note the square root is there because $\text{var}(aX)=a^2\text{var}(X)$, so the constant in the denominator will end up being squared, and things all work out to ensure $Z_n$ has a variance of $1$, as is easy to check.
 
 
 ## What about a function of my random variable?
@@ -99,12 +99,12 @@ $$
 g(z) = g(\theta) + g'(c_z)(z-\theta)
 $$
 
-Hopefully this image provides some geometric intution for the mean value theorem
+Hopefully this image provides some geometric intuition for the mean value theorem
 
 <img src="/assets/images/mvt.png" alt="Mean value theorem" class="full">
 
 
-It's really just saying that if a function connects 2 points, then at *some* point(s) between them the gradiant of that function will have to equal the gradiant of straight line connecting those points. It doesn't tell us what that point is, only that it must exist.
+It's really just saying that if a function connects 2 points, then at *some* point(s) between them the gradient of that function will have to equal the gradient of straight line connecting those points. It doesn't tell us what that point is, only that it must exist.
 
 Similarly if $z<\theta$
 
@@ -175,7 +175,7 @@ which tells us that $C_{\bar{X}_n}$ converges to $\mu$ in probability
 
 $$C_{\bar{X}_n} \xrightarrow[n \to \infty]{\mathbb{P}} \mu$$
 
-The [Continuous Mapping Theorem](https://en.wikipedia.org/wiki/Continuous_mapping_theorem) tells us that continous functions preserve the limits, and $g'$ is by assumption continuous, so we can write
+The [Continuous Mapping Theorem](https://en.wikipedia.org/wiki/Continuous_mapping_theorem) tells us that continuous functions preserve the limits, and $g'$ is by assumption continuous, so we can write
 
 $$g(C_{\bar{X}_n}) \xrightarrow[n \to \infty]{\mathbb{P}} g(\mu)$$
 
