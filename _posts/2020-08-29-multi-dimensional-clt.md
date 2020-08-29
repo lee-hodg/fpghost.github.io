@@ -6,7 +6,7 @@ categories:
 tags:
   - Statistics
 header:
-  image: /assets/images/multiv_gaussian.jpg
+  image: /assets/images/multiv_gaussian.png
 ---
 
 
@@ -19,7 +19,7 @@ $$
 Here we have a $d$ dimensional vector.
 
 {% capture notice-2 %}
-Note that in the univariate case we had $X_1, X_2, \dots, X_n$, were the subscripts denoted the trial/sample in a repeat of the experiment (e.g. $i$-th roll of a dice and a single number recording the result). In the multivariate case, we would get a vector of results *on every single trial*, e.g. 
+Note that in the univariate case we had $X_1, X_2, \dots, X_n$, were the subscripts denoted the trial/sample in a repeat of the experiment (e.g. $i$th roll of a dice and a single number recording the result). In the multivariate case, we would get a vector of results *on every single trial*, e.g. 
 
 
 $$

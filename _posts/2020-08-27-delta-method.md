@@ -5,9 +5,11 @@ categories:
   - blog
 tags:
   - Statistics
+toc: true
+toc_sticky: true
 ---
 
-# The delta method
+# The Delta Method
 
 
 ## Review of the CLT
