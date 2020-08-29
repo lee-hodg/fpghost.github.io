@@ -1,5 +1,5 @@
 ---
-title: "The delta method"
+title: "The Delta Method"
 date: 2020-08-27T20:00:00
 categories:
   - blog
