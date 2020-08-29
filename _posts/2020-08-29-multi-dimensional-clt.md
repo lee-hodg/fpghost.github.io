@@ -6,12 +6,7 @@ categories:
 tags:
   - Statistics
 header:
-  overlay_image: /assets/images/multiv_gaussian.jpg
-  background
-  caption: "Multidimensional Gaussian"
-  actions:
-    - label: "More Info"
-      url: "https://en.wikipedia.org/wik/Multivariate_normal_distribution"
+  image: /assets/images/multiv_gaussian.jpg
 ---
 
 
