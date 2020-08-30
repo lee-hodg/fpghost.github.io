@@ -351,4 +351,26 @@ def plot_comparison(ax):
 plot_comparison(ax)
 ```
 
+{% capture notice-bin %}
+
 <img src="/assets/images/coin_rejection_binom.png" alt="Comparing binomial with CLT" class="full">
+{% endcapture %}
+<div class="notice">{{ notice-notice-bin-zoom | markdownify }}</div>
+
+
+Zooming in
+
+```python
+fig, ax = plt.subplots(1, 1)
+plot_comparison(ax)
+ax.set_ybound((0.01, 0.3))
+ax.set_xbound((0.3, 0.7))
+ax.set_xticks(np.arange(0.30,0.70,0.04));
+```
+
+{% capture notice-bin-zoom %}
+
+<img src="/assets/images/coin_rejection_binom_zoom.png" alt="Comparing binomial with CLT" class="full">
+
+{% endcapture %}
+<div class="notice">{{ notice-notice-bin-zoom | markdownify }}</div>
