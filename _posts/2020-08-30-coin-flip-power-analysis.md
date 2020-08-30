@@ -29,9 +29,6 @@ T_n = \sqrt{n}\frac{|\bar{X}_n - 1/2|}{\sqrt{1/2(1-1/2)}}=2\sqrt{n}|\bar{X}_n-1/
 $$
 
 {% capture notice-aside-1 %}
-
-### Aside/revision
-
 Why do we choose this as our test statistics? Well, if $X_j \sim \text{Ber}(p)$, then 
 
 $$
@@ -368,3 +365,7 @@ ax.set_xticks(np.arange(0.30,0.70,0.04));
 
 <img src="/assets/images/coin_rejection_binom_zoom.png" alt="Comparing binomial with CLT" class="full">
 
+
+If we did the same thing but with $n=1000$
+
+<img src="/assets/images/coin_rejection_binom1000_zoom.png" alt="Comparing binomial with CLT" class="full">
