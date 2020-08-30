@@ -166,7 +166,7 @@ print(f'The rejection region is less than {lower_r:.2f} or above {upper_r:.2f}')
 print(f'{(1-alpha)*100} % of the time we get a count of heads out of {n} flips between {n*lower_r:.2f} and {n*upper_r:.2f} if n={n}')
 ```
 
-Running this script tells me that, if $n=100$ and $\alpha=0.05$, with a fair coin we'd reject the null hypothesis (erroneously, type 1 error) if we had less than 40 heads or more than 60 heads. Our rejection rejection, $R_{\psi_n}$ is therefore less than 40 or above 60.
+Running this script tells me that if $n=100$ and $\alpha=0.05$, with a fair coin we'd reject the null hypothesis (erroneously, type 1 error) if we had less than 40 heads or more than 60 heads. Our rejection rejection, $R_{\psi_n}$ is therefore less than 40 or above 60.
 
 
 ### What is the probability that we reject the null hypothesis when $p\ne 0.5$?
@@ -204,7 +204,7 @@ $$
 1-\Phi\Big(q_{\alpha/2} + 2\sqrt{n}\left(1/2 - p\right) \Big)
 $$
 
-Notice if $p>1/2$ then this would decrease the $q$ decreasing the cdf and increasing the probability of rejection...But if $p=1/2$ there'd be no change.
+Notice if $p>1/2$ then this would decrease the $q$ decreasing the CDF and increasing the probability of rejection...But if $p=1/2$ there'd be no change.
 
 
 Similarly, reject on the left if
@@ -312,7 +312,7 @@ With 100 flips, we can only distinguish a very bias coin where p<0.34p<0.34 or p
 We need a big sample size if we are going to detect small deviations from a fair coin with reasonable power.
 
 
-# Exact analysis given flips follow binomial distribution
+# Exact analysis given flips follow a binomial distribution
 
 
 ```python
