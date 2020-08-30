@@ -21,7 +21,7 @@ description: >- # this means to ignore newlines until "baseurl:"
   Just another blog about data science, ML, AI, Statistics, Physics,
   Python, Django, Freelancing, Web Scraping
 github_username: fpghost
-minimal_mistakes_skin: dark
+minimal_mistakes_skin: air
 search: true
 
 # Build settings

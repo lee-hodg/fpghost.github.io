@@ -6,7 +6,7 @@ categories:
 tags:
   - Statistics
 header:
-  image: /assets/images/coin_flip.jpeg
+  image: /assets/images/coin-header.jpeg
 ---
 
 # Deciding if a coin is fair
@@ -351,11 +351,9 @@ def plot_comparison(ax):
 plot_comparison(ax)
 ```
 
-{% capture notice-bin %}
 
 <img src="/assets/images/coin_rejection_binom.png" alt="Comparing binomial with CLT" class="full">
-{% endcapture %}
-<div class="notice">{{ notice-notice-bin-zoom | markdownify }}</div>
+
 
 
 Zooming in
@@ -368,9 +366,5 @@ ax.set_xbound((0.3, 0.7))
 ax.set_xticks(np.arange(0.30,0.70,0.04));
 ```
 
-{% capture notice-bin-zoom %}
-
 <img src="/assets/images/coin_rejection_binom_zoom.png" alt="Comparing binomial with CLT" class="full">
 
-{% endcapture %}
-<div class="notice">{{ notice-notice-bin-zoom | markdownify }}</div>
