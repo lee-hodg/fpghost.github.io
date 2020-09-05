@@ -60,6 +60,23 @@ $$
 
 where the bias is being broadcast.
 
+In this formulation, at each layer the weights matrices have dimensions 
+
+$$
+\text{dim}(\mathbf{W}^{[l]})=n_l \times n_{l-1}
+$$
+
+the bias matrices have dimensions (after broadcasting over training examples)
+
+$$
+\text{dim}(\mathbf{b}^{[l]})=n_l \times m
+$$
+
+and the activations also have this dimension
+
+$$
+\text{dim}(\mathbf{A}^{[l]})=n_l \times m
+$$
 
 This leads to the key equations:
 
@@ -223,7 +240,8 @@ def sigmoid_backward(dA, cache):
 
 # Initializing parameters
 
-We will implement a deep NN with $L$ layers. This function will take an array specifying how many nodes in each layer of our NN, e.g. `[5,4,3]` would mean the input layer has 5 nodes, the hidden layer has 4 nodes and the output layer has 3 nodes.
+We will implement a deep NN with $L$ layers. This function will take an array specifying how many nodes in each layer of our NN, e.g. `[5,4,3]` would mean the input layer has 5 nodes, the hidden layer has 4 nodes and the output layer has 3 nodes. It will randomly initialize the weights and biases matrices that we will need for such a NN and return them in a parameters dictionary.
+
 
 ```python
 
@@ -241,12 +259,112 @@ def initialize_parameters_deep(layer_dims):
     L = len(layer_dims)  # number of layers in the network
 
     for l in range(1, L):
+        # Randomly init n_l x n_{l-1} matrix for weights
         parameters[f'W{l}'] = np.random.randn(layer_dims[l], layer_dims[l-1]) * 0.01
+        # Randomly init n_1 x 1 matrix for biases (will be broadcast to n_1 x m)
         parameters[f'b{l}'] = np.zeros((layer_dims[l], 1))
-        
-        assert(parameters['W' + str(l)].shape == (layer_dims[l], layer_dims[l-1]))
-        assert(parameters['b' + str(l)].shape == (layer_dims[l], 1))
-
-        
+                
     return parameters
 ```
+
+This results in the parameters dictionary looking something like
+
+```python
+{'W1': [[ 0.01788628,  0.0043651 ,  0.00096497, -0.01863493, -0.00277388],
+        [-0.00354759, -0.00082741, -0.00627001, -0.00043818, -0.00477218],
+        [-0.01313865,  0.00884622,  0.00881318,  0.01709573,  0.00050034],
+        [-0.00404677, -0.0054536 , -0.01546477,  0.00982367, -0.01101068]],
+ 'W2': [[-0.01185047, -0.0020565 ,  0.01486148,  0.00236716],
+        [-0.01023785, -0.00712993,  0.00625245, -0.00160513],
+        [-0.00768836, -0.00230031,  0.00745056,  0.01976111]],
+ 'b1': [[ 0.],
+        [ 0.],
+        [ 0.],
+        [ 0.]],
+ 'b2': [[ 0.],
+        [ 0.],
+        [ 0.]]}
+```
+
+# Forward propagation
+
+## Linear forward
+
+First, implement the linear part. Namely
+
+$$
+\mathbf{Z}=\mathbf{W}\mathbf{A}+\mathbf{b}
+$$
+
+where here $\mathbf{A}$ is the activation from the previous layer (or if the first step, then the input data $\mathbf{X}$ as defined above).
+
+
+```python
+
+def linear_forward(A, W, b):
+    """
+    Implement the linear part of a layer's forward propagation.
+
+    Arguments:
+    A -- activations from previous layer (or input data): (size of previous layer, number of examples)
+    W -- weights matrix: numpy array of shape (size of current layer, size of previous layer)
+    b -- bias vector, numpy array of shape (size of the current layer, 1)
+
+    Returns:
+    Z -- the input of the activation function, also called pre-activation parameter 
+    cache -- a python tuple containing "A", "W" and "b" ; stored for computing the backward pass efficiently
+    """
+    
+    Z = np.dot(W, A) + b
+    
+    assert(Z.shape == (W.shape[0], A.shape[1]))
+    cache = (A, W, b)
+    
+    return Z, cache
+```
+
+## Linear activation forward
+
+The next forward step is applying activation to the nodes' output. We make this step somewhat generic by allowing the user to choose the activation as either sigmoid or ReLu
+
+
+WHY IS THIS NOT TAKING Z FROM LINEAR FORWARD FUNCTION JUST DEFINED??
+
+```python
+def linear_activation_forward(A_prev, W, b, activation):
+    """
+    Implement the forward propagation for the LINEAR->ACTIVATION layer
+
+    Arguments:
+    A_prev -- activations from previous layer (or input data): (size of previous layer, number of examples)
+    W -- weights matrix: numpy array of shape (size of current layer, size of previous layer)
+    b -- bias vector, numpy array of shape (size of the current layer, 1)
+    activation -- the activation to be used in this layer, stored as a text string: "sigmoid" or "relu"
+
+    Returns:
+    A -- the output of the activation function, also called the post-activation value 
+    cache -- a python tuple containing "linear_cache" and "activation_cache";
+             stored for computing the backward pass efficiently
+    """
+    
+    if activation == "sigmoid":
+        Z, linear_cache = linear_forward(A_prev, W, b)
+        A, activation_cache = sigmoid(Z)
+    
+    elif activation == "relu":
+        Z, linear_cache = linear_forward(A_prev, W, b)
+        A, activation_cache = relu(Z)
+    
+    assert (A.shape == (W.shape[0], A_prev.shape[1]))
+    cache = (linear_cache, activation_cache)
+
+    return A, cache
+```
+
+
+## L layers
+
+For this NN we want to have L-1 layers that are "Linear + ReLu" and the output layer to be "Linear + Sigmoid". The want the final layer to be sigmoid so that we can get predictions that represent probabilities for each of our classes with something like softmax.
+
+<img src="/assets/images/model_architecture_kiank.png" alt="L-forward (stolen from Andrew Ng)" class="full">
+
