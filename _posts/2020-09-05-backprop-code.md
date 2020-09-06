@@ -328,8 +328,6 @@ def linear_forward(A, W, b):
 The next forward step is applying activation to the nodes' output. We make this step somewhat generic by allowing the user to choose the activation as either sigmoid or ReLu
 
 
-WHY IS THIS NOT TAKING Z FROM LINEAR FORWARD FUNCTION JUST DEFINED??
-
 ```python
 def linear_activation_forward(A_prev, W, b, activation):
     """
