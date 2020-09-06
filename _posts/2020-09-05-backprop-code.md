@@ -458,6 +458,8 @@ def compute_cost(AL, Y):
 
 ## Linear backwards
 
+We implement this part of the key equations
+
 $$
 \begin{aligned}
 \mathbf{dW}^{[l]}&
@@ -468,8 +470,7 @@ $$
 $$
 
 This step computes the $\mathbf{dA}$ that we will pass backwards to the previous layer.
-It needs the linear gradient $\mathbf{dZ}$ of the current layer (which we will soon compute in the "activation backwards" step) and the current layer weights (which
-we handily cached during forward propagation).
+It needs the linear gradient $\mathbf{dZ}$ of the current layer (which we will soon compute in the "activation backwards" step) and the current layer weights and previous layer activation outputs (both of which we handily cached during forward propagation).
 
 It also computes the gradient contributions of this layer, $\mathbf{dW}$ and $\mathbf{db}$.
 
@@ -516,4 +517,192 @@ def linear_backward(dZ, cache):
     assert (db.shape == b.shape)
     
     return dA_prev, dW, db
+```
+
+
+## Linear and Activation backwards
+
+The linear layer needed $\mathbf{dZ}$ as input. In this step we compute it from the 
+post-activation gradient $\mathbf{dA}$ that the subsequent layer would have passed back to us.
+We already implemented some helper functions to do that, so this function just composes the linear backwards and activation backwards steps.
+
+
+
+
+```python
+ def linear_activation_backward(dA, cache, activation):
+    """
+    Implement the backward propagation for the LINEAR->ACTIVATION layer.
+    
+    Arguments:
+    dA -- post-activation gradient for current layer l 
+    cache -- tuple of values (linear_cache, activation_cache) we store for computing backward propagation efficiently
+    activation -- the activation to be used in this layer, stored as a text string: "sigmoid" or "relu"
+    
+    Returns:
+    dA_prev -- Gradient of the cost with respect to the activation (of the previous layer l-1), same shape as A_prev
+    dW -- Gradient of the cost with respect to W (current layer l), same shape as W
+    db -- Gradient of the cost with respect to b (current layer l), same shape as b
+    """
+    # Linear cache is the A_prev, W, b, activation cache is the Z    
+    linear_cache, activation_cache = cache
+    
+    if activation == "relu":
+        dZ = relu_backward(dA, activation_cache)
+        dA_prev, dW, db = linear_backward(dZ, linear_cache)
+        
+    elif activation == "sigmoid":
+        dZ = sigmoid_backward(dA, activation_cache)
+        dA_prev, dW, db = linear_backward(dZ, linear_cache)
+    
+    return dA_prev, dW, db
+```
+
+
+## L layers backwards
+
+$$
+\frac{\partial \mathcal{L}}{\partial Y}=-\frac{Y}{\hat{Y}}+\frac{1-Y}{1-\hat{Y}}
+$$
+
+```python
+def L_model_backward(AL, Y, caches):
+    """
+    Implement the backward propagation for the [LINEAR->RELU] * (L-1) -> LINEAR -> SIGMOID group
+    
+    Arguments:
+    AL -- probability vector, output of the forward propagation (L_model_forward())
+    Y -- true "label" vector (containing 0 if non-cat, 1 if cat)
+    caches -- list of caches containing:
+                every cache of linear_activation_forward() with "relu" (it's caches[l], for l in range(L-1) i.e l = 0...L-2)
+                the cache of linear_activation_forward() with "sigmoid" (it's caches[L-1])
+    
+    Returns:
+    grads -- A dictionary with the gradients
+             grads["dA" + str(l)] = ... 
+             grads["dW" + str(l)] = ...
+             grads["db" + str(l)] = ... 
+    """
+    grads = {}
+    L = len(caches) # the number of layers
+
+    # AL has shape (1 x m) - prediction per training example
+    m = AL.shape[1]
+
+    # Ensure the ground truth labels are also shape (1 x m) [not m x 1]
+    Y = Y.reshape(AL.shape) 
+    
+    # Initializing the backpropagation: derivative of cost with respect to AL
+    dAL = - (np.divide(Y, AL) - np.divide(1 - Y, 1 - AL)) 
+    
+    # Lth layer (SIGMOID -> LINEAR) gradients. 
+    current_cache = caches[L-1]  
+    # Remember this spits out the dA for the previous layer (to pass back) and the gradient contribs
+    # for the current layer
+    grads[f"dA{L-1}"], grads[f"dW{L}"], grads[f"db{L}"] = linear_activation_backward(dAL, current_cache, "sigmoid")
+    
+    # Loop from l=L-2 to l=0   e.g. list(reversed(range(5-1))) = [3, 2, 1, 0]
+    for l in reversed(range(L-1)):
+        # lth layer: (RELU -> LINEAR) gradients.
+        current_cache = caches[l]
+        grads[f"dA{l}"], grads[f"dW{l+1}"], grads[f"db{l+1}"] = linear_activation_backward(grads[f"dA{l+1}"], current_cache, "relu")
+
+    return grads
+```
+
+## Update parameters
+
+All that is left to do now is update the weights and biases
+
+
+$$ W^{[l]} = W^{[l]} - \alpha \text{ } dW^{[l]} $$
+$$ b^{[l]} = b^{[l]} - \alpha \text{ } db^{[l]} $$
+
+where here $\alpha$ is the learning rate hyperparameter.
+
+```python
+def update_parameters(parameters, grads, learning_rate):
+    """
+    Update parameters using gradient descent
+    
+    Arguments:
+    parameters -- python dictionary containing your parameters 
+    grads -- python dictionary containing your gradients, output of L_model_backward
+    
+    Returns:
+    parameters -- python dictionary containing your updated parameters 
+                  parameters["W" + str(l)] = ... 
+                  parameters["b" + str(l)] = ...
+    """
+    
+    L = len(parameters)// 2 # number of layers in the neural network (since each layer has weights+bias)
+
+    # Update rule for each parameter. Use a for loop.
+    for l in range(L):
+        parameters[f"W{l+1}"] = parameters[f"W{l+1}"] - (learning_rate*grads[f"dW{l+1}"])
+        parameters[f"b{l+1}"] = parameters[f"b{l+1}"] - (learning_rate*grads[f"db{l+1}"])
+    return parameters
+```
+
+# Putting it all together
+
+```python
+
+def L_layer_model(X, Y, layers_dims, learning_rate = 0.0075, num_iterations = 3000, print_cost=False):
+    """
+    Implements a L-layer neural network: [LINEAR->RELU]*(L-1)->LINEAR->SIGMOID.
+    
+    Arguments:
+    X -- data, numpy array of shape (num_px * num_px * 3, number of examples)
+    Y -- true "label" vector (containing 0 if cat, 1 if non-cat), of shape (1, number of examples)
+    layers_dims -- list containing the input size and each layer size, of length (number of layers + 1).
+    learning_rate -- learning rate of the gradient descent update rule
+    num_iterations -- number of iterations of the optimization loop
+    print_cost -- if True, it prints the cost every 100 steps
+    
+    Returns:
+    parameters -- parameters learnt by the model. They can then be used to predict.
+    """
+
+    costs = []   # keep track of cost
+    
+    # Parameters initialization
+    parameters = initialize_parameters_deep(layers_dims)
+    
+    # Loop (gradient descent)
+    for i in range(0, num_iterations):
+
+        # Forward propagation: [LINEAR -> RELU]*(L-1) -> LINEAR -> SIGMOID.
+        AL, caches = L_model_forward(X, parameters)
+        
+        # Compute cost.
+        cost = compute_cost(AL, Y)
+    
+        # Backward propagation.
+        grads = L_model_backward(AL, Y, caches)
+ 
+        # Update parameters.
+        parameters = update_parameters(parameters, grads, learning_rate)
+                
+        # Print the cost every 100 training example
+        if print_cost and i % 100 == 0:
+            print ("Cost after iteration %i: %f" %(i, cost))
+        if print_cost and i % 100 == 0:
+            costs.append(cost)
+            
+    # plot the cost
+    plt.plot(np.squeeze(costs))
+    plt.ylabel('cost')
+    plt.xlabel('iterations (per hundreds)')
+    plt.title("Learning rate =" + str(learning_rate))
+    plt.show()
+    
+    return parameters
+```
+
+To run this model, we define the layer dimensions for the network
+
+```
+layers_dims = [12288, 20, 7, 5, 1] #  e,g 4-layer model
+parameters = L_layer_model(train_x, train_y, layers_dims, num_iterations = 2500, print_cost = True)
 ```
