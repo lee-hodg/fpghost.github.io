@@ -613,8 +613,12 @@ def L_model_backward(AL, Y, caches):
 All that is left to do now is update the weights and biases
 
 
-$$ W^{[l]} = W^{[l]} - \alpha \text{ } dW^{[l]} $$
-$$ b^{[l]} = b^{[l]} - \alpha \text{ } db^{[l]} $$
+$$ 
+\begin{aligned}
+W^{[l]} &= W^{[l]} - \alpha \text{ } dW^{[l]} \\
+b^{[l]} &= b^{[l]} - \alpha \text{ } db^{[l]} 
+\end{aligned}
+$$
 
 where here $\alpha$ is the learning rate hyperparameter.
 
