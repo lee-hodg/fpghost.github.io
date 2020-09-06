@@ -86,7 +86,7 @@ $$
 \begin{aligned}
 \mathbf{dZ}^{[l]} &=\mathbf{dA}^{[l]}\circ g'\left(\mathbf{Z}^{[l]}\right)\quad \text{activation backwards}\\
 \mathbf{dW}^{[l]}&
-=\frac{1}{m} \left(\mathbf{dZ^T}\right)^{[l]} \mathbf{A}^{[l-1]} \quad \text{compute grad contrib}\\
+=\frac{1}{m} \left(\mathbf{dZ}\right)^{[l]} \left(\mathbf{A}^{[l-1]}\right)^T \quad \text{compute grad contrib}\\
 \mathbf{db}^{[l]}&= \frac{1}{m}\sum_{i=1}^m \mathbf{dZ}^{[l](i)} \quad \text{compute bias grad contrib}\\
 \mathbf{dA}^{[l-1]} &= (\mathbf{W}^T)^{[l]} \mathbf{dZ}^{[l]}  \quad \text{linear backwards}
 \end{aligned}
@@ -368,3 +368,152 @@ For this NN we want to have L-1 layers that are "Linear + ReLu" and the output l
 
 <img src="/assets/images/model_architecture_kiank.png" alt="L-forward (stolen from Andrew Ng)" class="full">
 
+```python
+
+def L_model_forward(X, parameters):
+    """
+    Implement forward propagation for the [LINEAR->RELU]*(L-1)->LINEAR->SIGMOID computation
+    
+    Arguments:
+    X -- data, numpy array of shape (input size, number of examples)
+    parameters -- output of initialize_parameters_deep()
+    
+    Returns:
+    AL -- last post-activation value
+    caches -- list of caches containing:
+                every cache of linear_activation_forward() (there are L-1 of them, indexed from 0 to L-1)
+    """
+
+    # Record the caches for later efficiency
+    caches = []
+
+    # Initial input is the design matrix transposed, X
+    A = X
+
+    # number of layers in the neural network (has 2L keys, weights+biases each layer)
+    L = len(parameters) // 2  
+    
+    # [LINEAR -> RELU]*(L-1) layers
+    for l in range(1, L):
+        A_prev = A 
+        A, cache = linear_activation_forward(A_prev, parameters["W{l}"], parameters[f"b{l}"], "relu")
+        caches.append(cache)
+    
+    # Output layer LINEAR -> SIGMOID. 
+    AL, cache = linear_activation_forward(A, parameters[f"W{L}"], parameters[f"b{L}"], "sigmoid")
+    caches.append(cache)
+    
+    # We expect the final layer to be (1, m) row vector of predictions (1 per training example)
+    # If binary classification
+    assert(AL.shape == (1, X.shape[1]))
+            
+    return AL, caches
+```
+
+# Cost function
+
+In this simple example, we just implement a simple binary classification cost function.
+
+We expect the final output to be a $1 \times m$ row vector - a prediction $\hat{Y}^{(i)}=A^{[L] (i)}$ for each training example. The ground truth labels for each training example is the $1 \times m$ row vector $\mathbf{Y}$ with a $1$ or $0$ at each position.
+
+The binary cross-entropy is
+
+ $$
+ \mathcal{L} = -\frac{1}{m} \sum\limits_{i = 1}^{m} \mathbf{Y}^{(i)}\log\mathbf{\hat{Y}}^{(i)} + (1-\mathbf{Y}^{(i)})\log\left(1- \mathbf{\hat{Y}}^{(i)}\right) 
+ $$
+
+ In vectorized form this looks like
+
+$$
+\mathcal{L} = - \frac{1}{m} \mathbf{Y}\left(\log{\mathbf{\hat{Y}}}\right)^T-(\mathbf{1}-\mathbf{Y})\left(\log{(\mathbf{1}-\hat{\mathbf{Y}})}\right)^T
+$$
+
+```python
+def compute_cost(AL, Y):
+    """
+    Implement the cost function defined by equation
+
+    Arguments:
+    AL -- probability vector corresponding to your label predictions, shape (1, number of examples)
+    Y -- true "label" vector (for example: containing 0 if non-cat, 1 if cat), shape (1, number of examples)
+
+    Returns:
+    cost -- cross-entropy cost
+    """
+    # How many training examples
+    m = Y.shape[1]
+
+    # Compute loss from AL and Y.
+    cost = (-1/m)*(np.dot(Y, np.log(AL).T)+np.dot((1-Y), np.log(1-AL).T))
+    
+    # Get the right shape, e.g. squeeze turns [[1]] to 1
+    cost = np.squeeze(cost)    
+
+    return cost
+```
+
+
+# Backward propagation (backprop)
+
+
+## Linear backwards
+
+$$
+\begin{aligned}
+\mathbf{dW}^{[l]}&
+=\frac{1}{m} \left(\mathbf{dZ}\right)^{[l]} \left(\mathbf{A}^{[l-1]}\right)^T \quad \text{compute grad contrib}\\
+\mathbf{db}^{[l]}&= \frac{1}{m}\sum_{i=1}^m \mathbf{dZ}^{[l](i)} \quad \text{compute bias grad contrib}\\
+\mathbf{dA}^{[l-1]} &= (\mathbf{W}^T)^{[l]} \mathbf{dZ}^{[l]}  \quad \text{linear backwards}
+\end{aligned}
+$$
+
+This step computes the $\mathbf{dA}$ that we will pass backwards to the previous layer.
+It needs the linear gradient $\mathbf{dZ}$ of the current layer (which we will soon compute in the "activation backwards" step) and the current layer weights (which
+we handily cached during forward propagation).
+
+It also computes the gradient contributions of this layer, $\mathbf{dW}$ and $\mathbf{db}$.
+
+
+
+```python
+def linear_backward(dZ, cache):
+    """
+    Implement the linear portion of backward propagation for a single layer (layer l)
+
+    Arguments:
+    dZ -- Gradient of the cost with respect to the linear output (of current layer l)
+    cache -- tuple of values (A_prev, W, b) coming from the forward propagation in the current layer
+
+    Returns:
+    dA_prev -- Gradient of the cost with respect to the activation (of the previous layer l-1), same shape as A_prev
+    dW -- Gradient of the cost with respect to W (current layer l), same shape as W
+    db -- Gradient of the cost with respect to b (current layer l), same shape as b
+    """
+
+    # Grab from the cache, since we are going to need the current layer weights
+    A_prev, W, b = cache
+
+    # The activation matrices A should have dimension n_l x m
+    m = A_prev.shape[1]
+
+    # Compute dA to pass back to previous layer 
+    dA_prev = np.dot(W.T, dZ)
+
+    # Gradient contributions of this layer
+    # dim(dZ)=n_l x m, dim(A_prev)=n_{l-1} x m
+    # dZ.A_prev^T has dims n_l x n_{l-1}
+    dW = (1/m)*np.dot(dZ, A_prev.T)
+
+    # dZ has dims of n_l x m and db has dims like b, i.e. n_l x 1 (before the broadcasting)
+    # so we need to sum over training examples -> axis=1 (across columns)
+    # https://numpy.org/doc/stable/reference/generated/numpy.sum.html
+    db = 1/m*(np.sum(dZ, axis=1, keepdims=True))
+
+    
+    # Dimensional sanity checks (grads have sample dims as originals)
+    assert (dA_prev.shape == A_prev.shape)
+    assert (dW.shape == W.shape)
+    assert (db.shape == b.shape)
+    
+    return dA_prev, dW, db
+```
