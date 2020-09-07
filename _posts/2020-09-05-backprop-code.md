@@ -394,7 +394,7 @@ def L_model_forward(X, parameters):
     # [LINEAR -> RELU]*(L-1) layers
     for l in range(1, L):
         A_prev = A 
-        A, cache = linear_activation_forward(A_prev, parameters["W{l}"], parameters[f"b{l}"], "relu")
+        A, cache = linear_activation_forward(A_prev, parameters[f"W{l}"], parameters[f"b{l}"], "relu")
         caches.append(cache)
     
     # Output layer LINEAR -> SIGMOID. 
@@ -708,3 +708,136 @@ To run this model, we define the layer dimensions for the network
 layers_dims = [12288, 20, 7, 5, 1] #  e,g 4-layer model
 parameters = L_layer_model(train_x, train_y, layers_dims, num_iterations = 2500, print_cost = True)
 ```
+
+
+# Testing it
+
+To test it we could use a simple binary classification problem such as the [Sklearn Breast Cancer Dataset](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_breast_cancer.html).
+
+This dataset has data with 30 features used to detect whether a breast tumour is malignant or benign, such as the "mean radius".
+
+```python
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+X, y = load_breast_cancer(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+```
+
+The shape of `X_train.shape` is `(426, 30)` i.e. this is $m \times k$ and we need $k \times m$, so we will need to transpose. Moreover `y_train.shape` is `(426,)` and we'll need to reshape that to `(1, 426)`.
+
+```python
+X_train_T = X_train.T   # Our formulation expects transpose of design matrix
+X_test_T = X_test.T
+y_train = y_train.reshape(1, -1)  # We need 1 x m
+y_test = y_test.reshape(1, -1)  # We need 1 x m
+```
+
+Let's try a 4-layer NN 
+
+```python
+layers_dims = [30, 20, 7, 5, 1] #  4-layer model
+```
+
+Notice the input layer is 30 since our data has 30 features. The first hidden layer has 20 nodes, the next 7, the next 5 and finally the output layer is 1 corresponding to our prediction of malignant or benign.
+
+## Training the model
+
+```python
+parameters = L_layer_model(X_train_T, y_train, layers_dims, num_iterations = 10000, print_cost = True)
+```
+
+
+```python
+Cost after iteration 0: 0.693144
+Cost after iteration 100: 0.683078
+Cost after iteration 200: 0.676150
+Cost after iteration 300: 0.671366
+Cost after iteration 400: 0.668043
+Cost after iteration 500: 0.665694
+Cost after iteration 600: 0.663928
+Cost after iteration 700: 0.662127
+Cost after iteration 800: 0.652339
+Cost after iteration 900: 0.590585
+Cost after iteration 1000: 0.558723
+Cost after iteration 1100: 0.448147
+Cost after iteration 1200: 0.410654
+Cost after iteration 1300: 0.360289
+Cost after iteration 1400: 0.335892
+Cost after iteration 1500: 0.319279
+Cost after iteration 1600: 0.301837
+Cost after iteration 1700: 0.288383
+Cost after iteration 1800: 0.280121
+Cost after iteration 1900: 0.272764
+.
+.
+.
+Cost after iteration 8800: 0.168956
+Cost after iteration 8900: 0.165194
+Cost after iteration 9000: 0.166604
+Cost after iteration 9100: 0.164738
+Cost after iteration 9200: 0.164705
+Cost after iteration 9300: 0.166488
+Cost after iteration 9400: 0.164538
+Cost after iteration 9500: 0.163890
+Cost after iteration 9600: 0.165013
+Cost after iteration 9700: 0.164089
+Cost after iteration 9800: 0.163319
+Cost after iteration 9900: 0.164118
+```
+
+<img src="/assets/images/training_breast_cancer.png" alt="Cost function vs iterations" class="full">
+
+
+## Testing the accuracy
+
+```python
+def predict(X, y, parameters):
+    """
+    This function is used to predict the results of a  L-layer neural network.
+    
+    Arguments:
+    X -- data set of examples you would like to label
+    parameters -- parameters of the trained model
+    
+    Returns:
+    p -- predictions for the given dataset X
+    """
+    
+    m = X.shape[1]
+    n = len(parameters) // 2 # number of layers in the neural network
+    p = np.zeros((1, m))
+    
+    # Forward propagation
+    probas, caches = L_model_forward(X, parameters)
+
+    
+    # convert probas to 0/1 predictions
+    for i in range(0, probas.shape[1]):
+        if probas[0,i] > 0.5:
+            p[0, i] = 1
+        else:
+            p[0, i] = 0
+    
+
+    print("Accuracy: "  + str(np.sum((p == y)/m)))
+        
+    return p
+```
+
+First let's check the accuracy on the training set
+
+```python
+pred_train = predict(X_train_T, y_train, parameters)
+Accuracy: 0.9342723004694834
+```
+
+Not bad. What about the test set?
+
+```python
+pred_test = predict(X_test_T, y_test, parameters)
+Accuracy: 0.937062937062937
+```
+
+So seems our model is doing quite well!
+
+[Here](https://colab.research.google.com/drive/1cWCgLzQlpEOX0c61fwvmn5GaZUHr2N-x?usp=sharing) is a link to a Google Colab containing the above code.
