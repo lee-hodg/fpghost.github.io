@@ -11,7 +11,7 @@ header:
   image: /assets/images/big_nn.svg
 ---
 
-In a previous post, I walked through the maths of back-propagation ("backprop"). Here I will go through the implementation in Python (heavily based on Andrew Ng's course).
+In a [previous post]({% post_url 2020-09-01-backpop %}), I walked through the maths of back-propagation ("backprop"). Here I will go through the implementation in Python (heavily based on Andrew Ng's course).
 
 I'm going to use the alternative form equations (in the last blog post I denoted those with a tilde, but now I will drop that tilde). This means the design matrix expected is the transpose of the usual. Concretely it is the $k \times m$ dimensional matrix
 
