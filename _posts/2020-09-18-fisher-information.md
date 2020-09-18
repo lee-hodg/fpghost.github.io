@@ -208,3 +208,78 @@ $$
 
 So far we just defined this quantity $\mathcal{I}(\theta)$, which we called the Fisher Information and we provided in one dimension at least a theorem for it. We haven't yet said why the quantity is interesting.
 
+### Bernoulli
+
+Let's say we have $X \sim \text{Ber}(p)$, then the likelihood is
+
+$$
+L(X, p) =  p^{x}(1-p)^{1-x}
+$$
+
+(this is just a trick to avoid writing the PMF of the discrete Bernoulli with braces - if we observe $x_1=1$ for example the element in the product would just reduce to $p$, and if we observe $x_1=0$, then the element in the product would reduce to $1-p$)
+
+Therefore the log-likelihood is
+
+$$
+l(p)=x\log{p}+(1-x)\log{(1-p)}
+$$
+
+Taking derivatives with respect to the parameter $p$:
+
+$$
+l'(p)=\frac{x}{p}-\frac{1-x}{1-p}
+$$
+
+and the second derivative is
+
+$$
+l''(p)=-\frac{x}{p^2}-\frac{1-x}{(1-p)^2}
+$$
+
+
+### Via the variance
+
+Recall
+
+$$
+\mathcal{I} = \text{var}(l'(p))
+$$
+
+so for Bernoulli
+
+$$
+\begin{aligned}
+\mathcal{I}=\text{var}(l'(p))&=\text{var}\left(\frac{x}{p}-\frac{1-x}{1-p}\right)\\
+&=\text{var}\left(x\left(\frac{1}{p}+\frac{1}{1-p}\right)-\frac{1}{1-p}\right)\\
+&=\text{var}\left(x\left(\frac{1}{p}+\frac{1}{1-p}\right)\right)\\
+&=\text{var}\left(\frac{x}{p(1-p)}\right)\\
+&=\frac{1}{p^2(1-p)^2}\text{var}(X)\\
+&=\frac{1}{p(1-p)}\\
+\end{aligned}
+$$
+
+where the 3rd line follows from $\text{var}(X+c)=\text{var}(X)$ when $c$ is a constant, and the 4th line from $\text{var}(aX)=a^2\text{var}(X)$ where $a$ is also a constant. The final line follows because the variance of a Bernoulli random variable is $p(1-p)$
+
+### Via the expectation
+
+Recall
+
+$$
+\mathcal{I} = -\mathbb{E}(\ell''(p))
+$$
+
+so for the Bernoulli
+
+
+$$
+\begin{aligned}
+\mathcal{I}&=-\mathbb{E}(\ell''(p))\\
+&=-\mathbb{E}\left[-\frac{x}{p^2}-\frac{1-x}{(1-p)^2}\right]\\
+&=\mathbb{E}\left[\frac{x}{p^2}+\frac{1-x}{(1-p)^2}\right]\\
+&=\frac{p}{p^2}+\frac{1-p}{(1-p)^2}\\
+&=\frac{1}{p}+\frac{1}{(1-p)}\\
+&=\frac{1}{p(1-p)}
+\end{aligned}
+$$
+
+Great. It matches.
