@@ -324,4 +324,60 @@ $$
 \end{aligned}
 $$
 
-where we used the fact that for a Binimial the expectation is $\mathbb{E}[X]=np$.
+where we used the fact that for a Binomial the expectation is $\mathbb{E}[X]=np$.
+
+
+# Fisher Information and the Asymptotic Normality of the MLE
+
+So, why is this an interesting quantity?
+
+If we have some statistical model $(\mathbb {R}, \{ \mathbf{P}_\theta \} _{\theta \in \mathbb {R}})$, then the MLE (maximum likelihood estimator) for one observation maximizes the log-likelihood, which is the random variable $\ell (\theta ) = \ln L_1(X, \theta )$.
+
+If we did the experiment and observed $X_1=x_1$, then consider the graph of $\theta \mapsto \ln L_1(x_1, \theta )$  (i.e. the $x_1$ is fixed and we graph over $\theta$), then the Fisher Information
+
+$$
+\mathcal{I}(\theta ) = -\mathbb E\left[\ell ^{\prime \prime }(\theta )\right]
+$$
+
+tells us how curved on average the log-likelihood is. The second-derivative measures concavity/convexity (how curved the function is at a particular point), and $\mathcal{I}(\theta)$ measures the *average* curvature of the $\ell(\theta)$.
+
+It turns out that the Fisher information tells how curved (on average) the log-likelihood $\ln L_ n(x_1, \ldots , x_ n, \theta )$ for several samples $X_1 = x_1, \ldots , X_ n = x_ n$.
+
+In particular, $\mathcal{I}(\theta ^*)$ tells how curved (on average) the log-likelihood is near the true parameter.
+
+The larger the Fisher Information is near the true parameter, then the better the estimate we expect to have obtained from the MLE.
+
+The asymptotic normality of the ML estimator, will turn out to depends upon the Fisher information. For a one-parameter model (like Bernoulli), the asymptotic normality result will say something along the lines of following: that the asymptotic variance of the ML estimator is inversely proportional to the value of Fisher information at the true parameter $\theta*$ of the statistical model. This means that if the value of Fisher information at $\theta*$ is high, then the asymptotic variance of the ML estimator for the statistical model will be low.
+
+## Theorem
+
+There is some broad set of conditions for which the ML estimator, no matter what the model - as long as it satisfies some conditions - will have asymptotic normality (just like a sample average has asymptotic normality using the CLT).
+
+Remember that the ML estimator, does not *have to be the sample average*. Sometimes it works out that way, but it is not always that.
+The following theorem for the converge of the MLE applies even in situations when the MLE is NOT the sample average.
+
+We do need some conditions to hold however. If $\theta^* \in \Theta$ is the true parameter, then the conditions are
+
+1. The parameter is *identifiable*.
+2. For all $\theta \in \Theta$, the support of $\mathbb{P}_{\theta}$ does not depend on $\theta$ (think of the uniform distribution where the values could be $[0, a]$ and density is $1/a$. Clearly this violates this condition)
+3. $\theta^*$ is not on the boundary of $\Theta$ (want to take derivatives and if on the boundary cannot do this)
+4. $\mathcal{I}(\theta)$ is invertible in a neighbourhood of $\theta^*$
+5. A few other "technical conditions".
+
+Then $\widehat{\theta }_ n^{\text {MLE}}$ satisfies
+
+$$
+\widehat{\theta }_ n^{\text {MLE}} \xrightarrow[n \to \infty]{(\mathbb{P})}\theta* \quad \text{consistency}
+$$
+
+and
+
+$$
+\sqrt{n}\left(\widehat{\theta }_ n^{\text {MLE}} -\theta^*\right)\xrightarrow[n \to \infty]{(d)}\mathcal{N}_d\left(0, \mathcal{I}(\theta)^{-1}\right) \quad \text{asymptotic normality}
+$$
+
+From a semantic point of view, "information" says if I have a lot of information then the smaller the asymptotic variance. I reduce my uncertainty by having more information.
+
+
+## Informal proof
+
