@@ -137,6 +137,8 @@ $$
 
 ##### What's left?
 
+The remaining terms are
+
 $$
 \begin{aligned}
 \mathcal{I}(\theta )=\mathbb {E}\left[(\ell '(\theta ))^2\right]
@@ -147,7 +149,7 @@ $$
 $$
 
 
-##### Alternate direction
+##### Alternative direction
 
 The theorem we want to show is
 
