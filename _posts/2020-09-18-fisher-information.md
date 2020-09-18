@@ -8,7 +8,7 @@ tags:
 toc: true
 toc_sticky: true
 header:
-  image: /assets/images/big_nn.svg
+  image: /assets/images/fishing.jpg
 ---
 
 # Log-Likelihood
