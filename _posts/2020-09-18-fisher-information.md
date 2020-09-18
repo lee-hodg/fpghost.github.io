@@ -285,3 +285,43 @@ $$
 $$
 
 Great. It matches.
+
+### Binomial
+
+Let's say we have $X \sim \text{Bin}(n, p)$, then the likelihood is
+
+$$
+L(X, p) =  {n \choose X} p^{X}(1-p)^{n-X}
+$$
+
+t in the product would reduce to $1-p$)
+
+Therefore the log-likelihood is
+
+$$
+\displaystyle  \ell (p) \triangleq \ln {n \choose X} + X \ln p + (n-X) \ln (1-p), ~ ~ ~  X \in \{ 0,1,\dots ,n\} .
+$$
+
+Computing derivatives leads to
+
+$$
+\displaystyle  \ell '(p) = \frac{X}{p} - \frac{n-X}{1-p},
+$$
+
+and
+
+$$
+\displaystyle  \ell ^{\prime \prime }(p) = -\frac{X}{p^2} - \frac{n-X}{(1-p)^2}.
+$$
+
+We will compute the Fisher Information via the expectation
+
+$$
+\begin{aligned}
+\displaystyle  \mathcal{I}(p)& = -\mathbb E[\ell ^{\prime \prime }(p)]\displaystyle = \mathbb E\left[\frac{X}{p^2} + \frac{n-X}{(1-p)^2}\right]\\
+&=\displaystyle = \frac{np}{p^2} + \frac{n-np}{(1-p)^2}\\
+&=\displaystyle = \frac{n}{p(1-p)}.
+\end{aligned}
+$$
+
+where we used the fact that for a Binimial the expectation is $\mathbb{E}[X]=np$.
