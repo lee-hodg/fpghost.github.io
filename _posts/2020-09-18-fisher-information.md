@@ -379,5 +379,119 @@ $$
 From a semantic point of view, "information" says if I have a lot of information then the smaller the asymptotic variance. I reduce my uncertainty by having more information.
 
 
-## Informal proof
+## Informal proof in one dimension
 
+### Recap: the KL divergence and MLE
+
+$$
+\text{KL}(\mathbb{P}_{\theta^*}, \mathbb{P}_{\theta})=\mathbb{E}_{\theta^{*}}\left[\log{\frac{\mathbb{P}_{\theta^*}}{\mathbb{P}_{\theta}}}\right]
+$$
+
+and considering this as a function over $\theta$ that we'd like to minimize means we essentially have a constant and the term
+
+$$
+-\mathbb{E}_{\theta^{*}}\left[\log{\mathbb{P}_{\theta}}\right]
+$$
+
+By the LLN we replace the expectation by the sample average over our observations
+
+$$
+-\frac{1}{n}\sum_{i=1}^{n}\log{\left(\mathbb{P}_{\theta}(x_i)\right)}=-\log{\left(\prod_{i=1}^n\mathbb{P}_{\theta}(x_i)\right)}
+$$
+
+Minimizing the KL divergence over $\theta$ amounted to minimizing this negative log-likelihood.
+
+In terms of the current notation, we have 
+
+$$
+\mathbb{E}[l(\theta)]
+$$
+
+and we are replacing that by
+
+$$
+\frac{1}{n}\sum_{i=1}^{n}\log{f_\theta(X_i)}
+$$
+
+Now
+
+$$
+l_i(\theta)=\log{f_\theta(x_i)}
+$$
+
+
+I know that
+
+$$
+\frac{\partial }{\partial \theta}\sum_{i=1}^n l_i(\theta) \bigg\rvert_{\theta=\theta^*}=\sum_{i=1}^n \ell'_i(\hat{\theta}) =0
+$$
+
+because $\hat{\theta}$ is a maximizer.
+
+We also know that (see above)
+
+$$
+\mathbb {E}[\ell '(\theta^{*} )] = 0
+$$
+
+### Taylor expansion
+
+We do a first-order Taylor expansion of the derivative
+
+$$
+\begin{aligned}
+0 &= \sum_{i=1}^n \ell'_i(\hat{\theta})\\
+&\approx\sum_{i=1}^n \ell'_i(\theta^{*})+(\hat{\theta}-\theta^{*})\ell_i''(\theta^{*})\\
+&=\sum_{i=1}^n \ell'_i(\theta^{*})-\mathbb {E}[\ell '(\theta^{*} )]+(\widehat{\theta}-\theta^{*})\ell_i''(\theta^{*})
+\end{aligned}
+$$
+
+
+where on the third line I've introduced the expectation, which is allowed since we know it is zero anyway.
+
+This means I have a sum of random variables minus their expectations, so the CLT kicks in.
+
+We are free to multiply by $1/\sqrt{n}$ - since the left-hand side is just 0
+
+
+$$
+\begin{aligned}
+&\frac{1}{\sqrt{n}}\sum_{i=1}^n \left(\ell'_i(\theta^{*})-\mathbb {E}[\ell '(\theta^{*} )]\right)\\
+&=\frac{1}{\sqrt{n}}n\left(\frac{1}{n}\sum_{i=1}^n \ell'_i(\theta^{*})\right)-\frac{n}{\sqrt{n}}\mathbb {E}[\ell '(\theta^{*} )]\\
+&=\sqrt{n} \Bigg( \bar{\ell'}(\theta^{*})-\mathbb {E}[\ell '(\theta^{*} )]\Bigg)
+\end{aligned}
+$$
+
+Then by the CLT
+
+$$
+
+\sqrt{n} \Bigg( \bar{\ell'}(\theta^{*})-\mathbb {E}[\ell '(\theta^{*} )]\Bigg)\xrightarrow[n \to \infty]{(d)}\mathcal{N}(0,\text{var}\left(\ell'(\theta^{*}\right))=\mathcal{N}\left(0,\mathcal{I}\left(\theta^{*}\right)\right)
+$$
+
+Putting this together
+
+$$
+\begin{aligned}
+0&\approx \mathcal{N}\left(0,\mathcal{I}\left(\theta^{*}\right)\right)+(\widehat{\theta}-\theta^{*})\frac{1}{\sqrt{n}}\sum_{i=1}^n \ell_i''(\theta^{*})\\
+&= \mathcal{N}\left(0,\mathcal{I}\left(\theta^{*}\right)\right)+\sqrt{n}(\widehat{\theta}-\theta^{*})\left(\frac{1}{n}\sum_{i=1}^n \ell_i''(\theta^{*})\right)\\
+\end{aligned}
+$$
+
+and we know by LLN that
+
+$$
+\frac{1}{n}\sum_{i=1}^n \ell_i''(\theta^{*})\xrightarrow[n \to \infty]{(\mathbb{P})} \mathbb{E}\left[\ell''(\theta^{*})\right]=-\mathcal{I}(\theta^{*})
+$$
+
+so we can write
+
+$$
+\begin{aligned}
+ \sqrt{n}(\widehat{\theta}-\theta^{*})&\xrightarrow[n \to \infty]{(d)}\frac{1}{\mathcal{I}(\theta^{*})}\mathcal{N}\left(0,\mathcal{I}\left(\theta^{*}\right)\right)\\
+ &=\mathcal{N}\left(0,\frac{\mathcal{I}\left(\theta^{*}\right)}{\mathcal{I}^2\left(\theta^{*}\right)}\right)\\
+  &=\mathcal{N}\left(0,\mathcal{I}^{-1}\left(\theta^{*}\right)\right)
+ \end{aligned}
+ $$
+
+ where in the second line I've used $\text{var}(aX)=a^2 \text{var}(X)$.
