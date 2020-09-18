@@ -1,6 +1,6 @@
 ---
 title: "Fisher Information"
-date: 2020-09-198T12:46:00
+date: 2020-09-19T12:46:00
 categories:
   - Blog
 tags:
