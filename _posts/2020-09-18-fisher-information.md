@@ -495,3 +495,35 @@ $$
  $$
 
  where in the second line I've used $\text{var}(aX)=a^2 \text{var}(X)$.
+
+ ## Applying this to Bernoulli
+
+ For the case of Bernoulli, the ML estimator *is* just the sample average, since
+
+ $$
+\displaystyle  \ell_n '(p) = \frac{\sum_{i=1}^n x_i}{p} - \frac{n-\sum_{i=1}^n x_i}{1-p},
+$$
+
+and solving for $\ell_n '(\hat{p}^{MLE}_n) =0$ gives
+
+$$
+\hat{p}^{MLE}_n = \frac{1}{n}\sum_{i=1}^n x_i
+$$
+
+Given that the ML estimator is just the sample average this time, we already know from the CLT that
+
+$$
+ \sqrt{n}(\hat{p}^{MLE}_n-p^{*})\xrightarrow[n \to \infty]{(d)}\mathcal{N}(0, \sigma^2)
+ $$
+
+ where $\sigma^2=p^{*}(1-p^{*}$).
+
+ However we also computed earlier that for a Bernoulli
+
+$$
+ \mathcal{I}(p)=\frac{1}{p(1-p)}
+ $$
+
+ This checks out with our more general equation for the asymptotic normality of an ML estimator in terms of inverse Fisher Information.
+ 
+ Remember this more general form would apply even when the ML estimator wasn't just a sample average, and we can't just easily apply the CLT. But it's a nice sanity check that for the case where the ML estimator is just a sample average, we recover the expected result from the CLT.
