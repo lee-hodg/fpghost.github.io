@@ -95,3 +95,80 @@ Finally we use the LLN and replace the expectations by sample averages to get ou
 $$
 \hat{\theta}^{MM}_n=M^{-1}(\widehat{m}_1, \dots, \widehat{m}_d)
 $$
+
+# Asymptotics
+
+If we have
+
+$$
+M(\theta) = (m_1(\theta), \dots, m_d(\theta))
+$$
+
+and after replacing expectations by sample averages we define
+
+$$
+\widehat{M}(\theta) = (\widehat{m_1}(\theta), \dots, \widehat{m_d}(\theta))
+$$
+
+Then let
+
+$$
+\Sigma(\theta) = \text{Cov}\left(X_1, X_1^2, \dots, X_1^d\right)
+$$
+
+be the covariance matrix of the random vector 
+
+$$
+\mathbf{X}=\left(X_1, X_1^2, \dots, X_1^d\right)
+$$
+
+Where does this come from?
+
+Well, by the central-limit theorem (CLT) we have
+
+$$
+\sqrt{n}\left(\overline{X^k_n}-m_k(\theta)\right)\xrightarrow[n \to \infty]{(d))} \mathcal{N}(0, \text{var}\left(X_1^k\right))
+$$
+
+and more generally if I want to talk about the convergence of the entire random vector of moments, I have to talk about the full covariance matrix since by the multivariate CLT
+
+$$
+\sqrt{n}(\overline{X}_n - \mathbf{M}(\theta)) \xrightarrow[n \to \infty]{(d)} \mathcal{N}_d(\mathbf{0}, \Sigma_{\mathbf{X}})
+$$
+
+with
+
+$$
+\mathbf{\overline{X_n}}=\left(\overline{X_n}, \overline{X_n^2}, \dots, \overline{X_n^d}\right)
+$$
+
+These random variables are clearly correlates - if I know $X^2$ I know something about $X^4$ etc
+
+This is nice, but the goal here is a CLT for the inverses, my MM estimators. The way to obtain this is by applying the delta method.
+
+$$
+\sqrt{n}(\widehat{\mathbf{M}} - \mathbf{M}(\theta)) \xrightarrow[n \to \infty]{(d)} \mathcal{N}_d(\mathbf{0}, \Sigma_{\mathbf{X}})
+$$
+
+we want to talk about the convergence of estimates parameters so
+
+$$
+\begin{aligned}
+&\sqrt{n}\left[M^{-1}\left(\widehat{\mathbf{M}}\right) - M^{-1}\left(\mathbf{M}(\theta)\right)\right]\\
+&=\sqrt{n}\left(\widehat{\mathbf{\theta}}^{MM} - \mathbf{\theta}\right)
+\end{aligned}
+$$
+
+Recall that the multivariate delta method was
+
+$$
+\displaystyle  \displaystyle \sqrt{n} \left(\mathbf{g}(\bar{\mathbf{X}}_ n) - \mathbf{g}(\mathbf{\mu}) \right) \xrightarrow [n\to \infty ]{(d)} \, \displaystyle \mathcal{N}_d\left(\mathbf{0}, \nabla \mathbf{g}(\mathbf{\mu})^ T \Sigma _{\mathbf{X}} \nabla \mathbf{g}(\mathbf{\mu})\right)
+$$
+
+Here our mapping $g=M^{-1}$, so we will need to compute the gradient of that.
+
+$$
+\begin{aligned}
+\sqrt{n}\left(\widehat{\mathbf{\theta}}^{MM} - \mathbf{\theta}\right)\xrightarrow [n\to \infty ]{(d)} \, \displaystyle \mathcal{N}_d\left(\mathbf{0}, \nabla \left(M^{-1}(\theta)\right)^ T \Sigma _{\mathbf{X}} \left(\nabla M^{-1}(\theta)\right)\right)
+\end{aligned}
+$$
