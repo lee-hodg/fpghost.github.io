@@ -283,4 +283,34 @@ plt.savefig('graph1.png')
 plt.xticks(rotation=45)
 ```
 
-![alt]({{ site.url }}{{ site.baseurl }}/assets/images/cov_graph1.jpg)
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/cov_graph1.png)
+
+## Total cases per million
+
+The previous plot was interesting, but if a country has a much greater population than another country then all things being equal we would still expect to have higher case numbers in that country. For example, one might argue that even if the US had locked down super early and implemented the strictest measures possible then they're bound to have more cases than a tiny country like Aruba, merely because of the difference in population.
+
+For that reason, let's look at the total cases per million of the population.
+
+Also given that some countries (such as Aruba) have utterly tiny populations per capita case numbers may not be so meaningful for them, so we filter out any countries with a population smaller than 10M. 
+
+```python
+# top  countries - cases
+top_cases_per_m = df.loc[(df['date'] == today) & (df['population'] > 10000000), ['location', 'population', 'total_cases_per_million']].sort_values(by='total_cases_per_million', ascending=False)[1:top_N+1].reset_index(drop=True)
+pd.set_option('float_format', '{:,}'.format)
+top_cases_per_m
+```
+
+|    | location       |   population |   total_cases_per_million |
+|---:|:---------------|-------------:|--------------------------:|
+|  0 | United States  |  3.31003e+08 |                   33853.2 |
+|  1 | France         |  6.52735e+07 |                   30506   |
+|  2 | Argentina      |  4.51958e+07 |                   29170.2 |
+|  3 | Peru           |  3.29718e+07 |                   28456.6 |
+|  4 | Chile          |  1.91162e+07 |                   27861.4 |
+|  5 | Brazil         |  2.12559e+08 |                   27646.2 |
+|  6 | Netherlands    |  1.71349e+07 |                   26388.1 |
+|  7 | Colombia       |  5.08829e+07 |                   23686.1 |
+|  8 | Portugal       |  1.01967e+07 |                   22131.9 |
+|  9 | United Kingdom |  6.7886e+07  |                   20485.5 |
+
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/cov_graph2.png)
