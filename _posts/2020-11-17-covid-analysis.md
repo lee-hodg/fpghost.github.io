@@ -536,3 +536,88 @@ plt.savefig('brazil_case_death_lag.png')
 Since the case numbers are much more than the deaths, the second plot here uses a log scale on the y-axis to better highlight the relation in time between case numbers and deaths.
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/brazil_case_death_lag.png)
+
+We see that there is a lag between total cases and total deaths that appears to be around 2 weeks, at least for the first few months of the pandemic.
+
+# Economic impact
+
+The data to measure the economic impact was obtained from OECD.Stat OECD's quarterly national accounts data, available at [OECD.stat] (https://stats.oecd.org/Index.aspx?DatasetCode=SNA_TABLE1#)
+
+We will compute the percentage change in GDP compared with the same quarter of the previous year (Q2 2019) to try to get an idea of which countries suffered the most economic impact from Covid-19.
+
+## Import the data
+
+First we load the data with
+
+```
+df = pd.read_csv('./data/QNA_16112020232419872.csv')
+```
+
+This is a CSV file that you can generate at the OECD.stat link provided and then export.
+
+|    | LOCATION   | Country   | SUBJECT   | Subject       | MEASURE   | Measure                                                               | FREQUENCY   | Frequency   | TIME    | Period   | Unit Code   | Unit   |   PowerCode Code | PowerCode   |   Reference Period Code |   Reference Period |       Value |   Flag Codes |   Flags |
+|---:|:-----------|:----------|:----------|:--------------|:----------|:----------------------------------------------------------------------|:------------|:------------|:--------|:---------|:------------|:-------|-----------------:|:------------|------------------------:|-------------------:|------------:|-------------:|--------:|
+|  0 | JPN        | Japan     | GFSPB     | Public sector | CARSA     | National currency, current prices, annual levels, seasonally adjusted | Q           | Quarterly   | 2017-Q4 | Q4-2017  | JPY         | Yen    |                6 | Millions    |                     nan |                nan | 2.74922e+07 |          nan |     nan |
+|  1 | JPN        | Japan     | GFSPB     | Public sector | CARSA     | National currency, current prices, annual levels, seasonally adjusted | Q           | Quarterly   | 2018-Q1 | Q1-2018  | JPY         | Yen    |                6 | Millions    |                     nan |                nan | 2.77151e+07 |          nan |     nan |
+|  2 | JPN        | Japan     | GFSPB     | Public sector | CARSA     | National currency, current prices, annual levels, seasonally adjusted | Q           | Quarterly   | 2018-Q2 | Q2-2018  | JPY         | Yen    |                6 | Millions    |                     nan |                nan | 2.86863e+07 |          nan |     nan |
+|  3 | JPN        | Japan     | GFSPB     | Public sector | CARSA     | National currency, current prices, annual levels, seasonally adjusted | Q           | Quarterly   | 2018-Q3 | Q3-2018  | JPY         | Yen    |                6 | Millions    |                     nan |                nan | 2.80418e+07 |          nan |     nan |
+|  4 | JPN        | Japan     | GFSPB     | Public sector | CARSA     | National currency, current prices, annual levels, seasonally adjusted | Q           | Quarterly   | 2018-Q4 | Q4-2018  | JPY         | Yen    |                6 | Millions    |                     nan |                nan | 2.78111e+07 |          nan |     nan |
+
+
+Here the rows with subject "B1_GA" represent the GDP measured by the "output approach" to calculate GDP. It sums the gross value added of various sectors, plus taxes and less subsidies on products. This is the measure we will use to represent the GDP. Similarly "B1_GE" is the GDP computed by the expenditure approach and "B1_GI" is the GDP computed by the income approach. 
+
+The measure "CQRSA" represents millions of national currency, current prices, quarterly levels, seasonally adjusted.
+
+We filter the dataframe by this 'B1_GA' and 'CQR' measure and also select out just rows in Q2 of 2019 and 2020
+
+```python
+fdf = df[(df['Country'].str.contains('Euro') == False) & (df['SUBJECT'] == 'B1_GA')  & (df['Period'].isin(['Q2-2019', 'Q2-2020'])) &  (df['MEASURE'] == 'CQR')]
+```
+
+Next set a multi-index on country and period
+
+```python
+fdf = fdf.set_index(['Country', 'Period'])
+```
+
+Next, create a dataframe representing the percentage change per country from Q2 2019 to Q2 2020 of the CQR measured GDP by expenditure
+
+```python
+data = []
+for country in fdf.index.levels[0]:
+    # Compute the Q2 % diff
+    diff_q2 = (100*(fdf.loc[country].loc['Q2-2020']['Value'] - fdf.loc[country].loc['Q2-2019']['Value'])/fdf.loc[country].loc['Q2-2019']['Value'])
+    # Append the data
+    data.append([country, diff_q2])
+    
+# Generate a new diff with this data and sort by the diff    
+ec_df = pd.DataFrame(data, columns=['country', 'gdp_diff_q2']).sort_values(by='gdp_diff_q2', ascending=False)
+```
+
+Finally, plot the bar-chart to visualize the impact per country
+
+```python
+# create the matplotlib figure instance
+fig, ax = plt.subplots(figsize=(18, 18))
+
+# plot with seaborn
+sns.set(font_scale = 1.8)
+
+ax = sns.barplot(x='gdp_diff_q2', y='country', data=ec_df, 
+                  palette='colorblind');
+ax.set_title('COVID-19 - Econonomic impact per country', fontsize=14)
+ax.set_xlabel('GDP Difference Q2 2020 compared to Q2 2019')
+ax.set_ylabel('Country')
+   
+    
+plt.tight_layout()
+plt.savefig('graph_econ_impact.png')
+```
+
+
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/graph_econ_impact.png)
+
+It seems from this measure at least that China and Turkey actually experienced growth. Ireland and Scandinavian countries suffered less severe impact than other European countries, whereas Spain, Italy and France were very strongly affected. Saudi Arabia also appears to have took a huge economic blow in this quarter. We could speculate that this might be to do with global oil demand falling during global lockdowns. However, we may want to consider other measures of econonomic impact to be sure.
+
+# Sweden: a closer look
+
