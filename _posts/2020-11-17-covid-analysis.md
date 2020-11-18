@@ -345,3 +345,48 @@ top_deaths_per_m
 
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/cov_graph3.png)
+
+One other thing we can look at is the proportion of the worldwide deaths came from the top ten countries by death count:
+
+```python
+world_deaths = df[(df['date'] == today) &  (df['location']=='World')].iloc[0]['total_deaths']
+world_deaths
+top_deaths_sum = df.loc[(df['date'] == today), ['location', 'total_deaths']].sort_values(by='total_deaths', ascending=False)[1:top_N+1]['total_deaths'].sum()
+top_deaths_sum
+print(f'We have {world_deaths:,} worldwide deaths from of COVID on {today}. And {100*top_deaths_sum/world_deaths: .2f}% came from the {top_N} countries')
+```
+
+We have 1,328,537.0 worldwide deaths from of COVID on 2020-11-17. And  67.63% came from the 10 countries.
+
+
+# The increase in Covid cases
+
+We can get an idea of the speed covid spread per country by plotting the time series of the case count. To keep the charts uncluttered we will do this for just the 5 countries with the most cases
+
+```python
+top_evo_cases = df.copy()
+top_evo_cases.set_index('location', inplace = True)
+top_evo_cases = top_evo_cases.loc[top_5_cases_country_names]
+top_evo_cases = top_evo_cases.reset_index()
+
+# create the matplotlib figure instance
+fig, ax = plt.subplots(figsize=(18, 9))
+
+# plot with seaborn
+ax = sns.lineplot(x='date', y='total_cases', hue='location', data=top_evo_cases,  palette='colorblind');
+ax.set_title('COVID-19 - Total of cases per country', fontsize=14)
+ax.set_xlabel('Date')
+ax.set_ylabel('Number of Cases (ten million)')
+
+plt.tight_layout()
+plt.savefig('cov_evo_cases.png')
+```
+
+
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/cov_evo_cases.png)
+
+The number of cases starting increasing around mid to late March for the US, with upticks around July and again in October, showing no sign of levelling off.
+
+For a long time, Brazil, was the country with the second-highest number of cases until it was overtaken by India in early September. 
+
+The UK seemed to flatten out for a while but has recently seen the case numbers begin to rise again.
