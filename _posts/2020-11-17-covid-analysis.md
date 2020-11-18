@@ -359,7 +359,9 @@ print(f'We have {world_deaths:,} worldwide deaths from of COVID on {today}. And 
 We have 1,328,537.0 worldwide deaths from of COVID on 2020-11-17. And  67.63% came from the 10 countries.
 
 
-# The increase in Covid cases
+# The increase in Covid 
+
+## Evolution in terms of case numbers
 
 We can get an idea of the speed covid spread per country by plotting the time series of the case count. To keep the charts uncluttered we will do this for just the 5 countries with the most cases
 
@@ -390,3 +392,31 @@ The number of cases starting increasing around mid to late March for the US, wit
 For a long time, Brazil, was the country with the second-highest number of cases until it was overtaken by India in early September. 
 
 The UK seemed to flatten out for a while but has recently seen the case numbers begin to rise again.
+
+## Evolution in terms of death counts
+
+We take the top countries by per million death counts and plot the evolution of total deaths in the country over time
+
+```python
+top_evo_death = df.copy()
+top_deaths_country_names = top_deaths_per_m['location'].values
+
+
+top_evo_death.set_index('location', inplace = True)
+top_evo_death = top_evo_death.loc[top_deaths_country_names]
+top_evo_death = top_evo_death.reset_index()
+
+# create the matplotlib figure instance
+fig, ax = plt.subplots(figsize=(18, 9))
+
+# plot with seaborn
+ax = sns.lineplot(x='date', y='total_deaths', hue='location', data=top_evo_death, palette='colorblind');
+ax.set_title('COVID-19 - Total of deaths per country', fontsize=14)
+ax.set_xlabel('Date')
+ax.set_ylabel('Number of deaths')
+
+plt.tight_layout()
+plt.savefig('graph_death_evo.png')
+```
+
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/graph_death_evo.png)
