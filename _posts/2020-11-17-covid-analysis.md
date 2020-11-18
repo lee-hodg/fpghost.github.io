@@ -541,7 +541,7 @@ We see that there is a lag between total cases and total deaths that appears to 
 
 # Economic impact
 
-The data to measure the economic impact was obtained from OECD.Stat OECD's quarterly national accounts data, available at [OECD.stat] (https://stats.oecd.org/Index.aspx?DatasetCode=SNA_TABLE1#)
+The data to measure the economic impact was obtained from OECD.Stat OECD's quarterly national accounts data, available at [OECD.stat](https://stats.oecd.org/Index.aspx?DatasetCode=SNA_TABLE1#)
 
 We will compute the percentage change in GDP compared with the same quarter of the previous year (Q2 2019) to try to get an idea of which countries suffered the most economic impact from Covid-19.
 
@@ -617,7 +617,164 @@ plt.savefig('graph_econ_impact.png')
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/graph_econ_impact.png)
 
-It seems from this measure at least that China and Turkey actually experienced growth. Ireland and Scandinavian countries suffered less severe impact than other European countries, whereas Spain, Italy and France were very strongly affected. Saudi Arabia also appears to have took a huge economic blow in this quarter. We could speculate that this might be to do with global oil demand falling during global lockdowns. However, we may want to consider other measures of econonomic impact to be sure.
+It seems from this measure at least that China and Turkey experienced growth. Ireland and Scandinavian countries suffered less severe impact than other European countries, whereas Spain, Italy and France were very strongly affected. Saudi Arabia also appears to have took a huge economic blow in this quarter. We could speculate that this might be to do with global oil demand falling during global lockdowns. However, we may want to consider other measures of economic impact to be sure.
 
 # Sweden: a closer look
+
+Sweden also drew fire for its approach to handling Covid-19. The country had a much less stringent lockdown than its neighbours and other European countries generally. 
+
+Let's see what the data can tell us so far about how Covid is affecting Sweden vs the rest of Scandinavia.
+
+First, define the countries we want to look at and filter the dataframe to only include these countries
+
+```python
+scandi_names = ['Sweden', 'Denmark', 'Norway', 'Finland']
+scandi_df = ec_df[ec_df['country'].isin(scandi_names)].sort_values(by='gdp_diff_q2', ascending=False)
+```
+## Economy
+
+Looking at the economic impact (as defined by the same measure previously) in Scandinavian countries in particular:
+
+```python
+# create the matplotlib figure instance
+fig, ax = plt.subplots(figsize=(9, 5))
+
+ax = sns.barplot(x='gdp_diff_q2', y='country', data=scandi_df, 
+                  palette='colorblind');
+ax.set_title('COVID-19 - Econonomic impact in Scandinavia', fontsize=14)
+ax.set_xlabel('GDP Diff')
+ax.set_ylabel('Country')
+   
+    
+plt.tight_layout()
+plt.savefig('scandi_econ_impact.png')
+```
+
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/scandi_econ_impact.png)
+
+## Total cases per million
+
+Here we compare the evolution of the number of cases per million between Scandinavian countries
+
+```python
+scandi_cases = df.copy()
+scandi_cases.set_index('location', inplace = True)
+scandi_cases = scandi_cases.loc[scandi_names]
+scandi_cases = scandi_cases.reset_index()
+
+# create the matplotlib figure instance
+fig, ax = plt.subplots(figsize=(18, 9))
+
+# plot with seaborn
+ax = sns.lineplot(x='date', y='total_cases_per_million', hue='location', data=scandi_cases, 
+                  palette='colorblind');
+ax.set_title('COVID-19 - Total of cases per million per Scandi country', fontsize=14)
+ax.set_xlabel('Date')
+ax.set_ylabel('Number of Cases per million')
+
+plt.tight_layout()
+plt.savefig('scandi_per_million.png')
+```
+
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/scandi_per_million.png)
+
+It seems that Sweden is fairing the worst out of its neighbours, even when accounting for population differences. Its neighbours seemed to flatten more after the 1st wave, however now all of these countries seem to be in the midst of raising cases in the second wave.
+
+## Deaths per million
+
+If we also look at the death count per million
+
+```python
+scandi_deaths = df.copy()
+scandi_deaths.set_index('location', inplace = True)
+scandi_deaths = scandi_deaths.loc[scandi_names]
+scandi_deaths = scandi_deaths.reset_index()
+
+# create the matplotlib figure instance
+fig, ax = plt.subplots(figsize=(18, 9))
+
+# plot with seaborn
+ax = sns.lineplot(x='date', y='total_deaths_per_million', hue='location', data=scandi_cases, 
+                  palette='colorblind');
+ax.set_title('COVID-19 - Total of deaths per million per Scandi country', fontsize=14)
+ax.set_xlabel('Date')
+ax.set_ylabel('Number of deaths per million')
+
+plt.tight_layout()
+plt.savefig('scandi_deaths.png')
+```
+
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/scandi_deaths.png)
+
+Sweden also seems to be doing worse on this metric than its neighbours.
+
+# UK lockdowns
+
+Focussing on the UK
+
+```python
+# Data for just Brazil
+df_uk = df.loc[df['location'] == 'United Kingdom'].copy()
+df_uk.set_index('date', inplace=True)
+```
+
+The UK went into its first national lockdown on 23 March 2020, and the second lockdown began on the 5 Nov 2020.
+
+In this section we will take a look at what impact if any these lockdowns had on the rising daily case numbers.
+
+
+```python
+# create the matplotlib figure instance
+fig, ax = plt.subplots(figsize=(18, 9))
+
+# plot with seaborn
+ax = sns.lineplot(x='date', y='new_deaths_smoothed', data=df_uk.loc['2020-02-25':'2020-05-30'], 
+                  palette='colorblind');
+ax.set_title('COVID-19 - New deaths per day UK (smoothed)', fontsize=14)
+ax.set_xlabel('Date')
+ax.set_ylabel('Number of new deaths per day')
+
+# Date of 1st UK lockdown
+ax.axvline(pd.to_datetime('2020-03-23'), color='r', linestyle='--', lw=2)
+
+plt.savefig('uk_lockdowns_1st_deaths.png')
+```
+
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/uk_lockdowns_1st_deaths.png)
+
+It seems that in March, after the first lockdown, it took around 3 weeks to see and cessation in the raise of daily new deaths.
+
+After the 2nd lockdown
+
+```python
+# create the matplotlib figure instance
+fig, ax = plt.subplots(figsize=(18, 9))
+
+# plot with seaborn
+ax = sns.lineplot(x='date', y='new_deaths_smoothed', data=df_uk.loc['2020-10-15':'2020-11-17'], 
+                  palette='colorblind');
+ax.set_title('COVID-19 - New deaths per day UK (smoothed)', fontsize=14)
+ax.set_xlabel('Date')
+ax.set_ylabel('Number of cases per day')
+
+# Date of the 2nd UK lockdown
+ax.axvline(pd.to_datetime('2020-11-05'), color='r', linestyle='--', lw=2)
+
+plt.savefig('uk_lockdowns_2_deaths.png')
+```
+
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/uk_lockdowns_2_deaths.png)
+
+We seem yet to have seen a slow down in the rise of number of daily deaths since the lockdown began on 5 Nov.
+
+# Conclusion
+
+In this blog post, we've analysed two Covid datasets. We've seen which countries are most affected by Covid in terms of case numbers, death counts and GDP reduction.
+
+We've considered the time series evolution of Covid and how spread rapidly during the 1st wave, slowed somewhat and then in many countries is now rising again in a 2nd wave.
+
+We also zoomed in to consider how countries like Sweden and Brazil, who adopted radically different approaches to tackling the pandemic, have faired.
+
+Finally, we zoomed in on the UK to consider what impact the strict lockdowns had on the rise of daily death counts.
+
 
