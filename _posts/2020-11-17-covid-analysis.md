@@ -8,7 +8,7 @@ tags:
 toc: true
 toc_sticky: true
 header:
-  overlay_image: /assets/images/vecoronavirus.jpg
+  overlay_image: /assets/images/coronavirus.jpg
   overlay_filter: 0.5 # same as adding an opacity of 0.5 to a black background
   caption: ": What can the data tell us?"
   actions:
@@ -319,3 +319,29 @@ top_cases_per_m
 |  9 | United Kingdom |  6.7886e+07  |                   20485.5 |
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/cov_graph2.png)
+
+## By deaths per million
+
+Similarly, let's try to measure the impact of Covid-19 on a country by considering the death rate per million.
+
+```python
+top_deaths_per_m = df.loc[(df['date'] == today) & (df['population'] > 10000000), ['location', 'population', 'total_deaths_per_million']].sort_values(by='total_deaths_per_million', ascending=False)[1:top_N+1].reset_index(drop=True)
+pd.set_option('float_format', '{:,}'.format)
+top_deaths_per_m
+```
+
+|    | location       |   population |   total_deaths_per_million |
+|---:|:---------------|-------------:|---------------------------:|
+|  0 | Argentina      |  4.51958e+07 |                    790.494 |
+|  1 | Brazil         |  2.12559e+08 |                    781.024 |
+|  2 | Chile          |  1.91162e+07 |                    777.508 |
+|  3 | United Kingdom |  6.7886e+07  |                    768.155 |
+|  4 | Mexico         |  1.28933e+08 |                    766.764 |
+|  5 | Bolivia        |  1.1673e+07  |                    758.072 |
+|  6 | Italy          |  6.04618e+07 |                    756.395 |
+|  7 | United States  |  3.31003e+08 |                    746.882 |
+|  8 | Ecuador        |  1.76431e+07 |                    737.741 |
+|  9 | France         |  6.52735e+07 |                    690.234 |
+
+
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/cov_graph3.png)
