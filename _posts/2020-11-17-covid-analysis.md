@@ -1,5 +1,5 @@
 ---
-title: "COVID-19: What can the data tell us?"
+title: "COVID-19 Analysis"
 date: 2020-11-17T20:00:00
 categories:
   - blog
@@ -8,7 +8,12 @@ tags:
 toc: true
 toc_sticky: true
 header:
-  image: /assets/images/coronavirus.jpg
+  overlay_image: /assets/images/vecoronavirus.jpg
+  overlay_filter: 0.5 # same as adding an opacity of 0.5 to a black background
+  caption: ": What can the data tell us?"
+  actions:
+    - label: "Notebook"
+      url: "https://github.com/lee-hodg/Covid19Study/blob/master/CovidStudy.ipynb"
 ---
 
 # What insights can we gain from data into the COVID-19 situation?
