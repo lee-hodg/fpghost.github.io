@@ -359,6 +359,69 @@ print(f'We have {world_deaths:,} worldwide deaths from of COVID on {today}. And 
 We have 1,328,537.0 worldwide deaths from of COVID on 2020-11-17. And  67.63% came from the 10 countries.
 
 
+## Testing per thousand
+
+Case numbers are bound to increase the more tests that are done by a country. Let's check out countries by how many tests per thousand of the population have been carried out.
+
+Again we will filter out countries with populations less than 10M, and since the testing columns often have null data we need to be careful to select only rows with non-nulls for this column:
+
+```python
+df_tests = df[(df['total_tests_per_thousand'].isnull() == False) & (df['population'] > 10000000) ]
+```
+
+Each country will have reported the latest `total_tests_per_thousand` on different dates. For example the UK reported it last on 2020-11-12 and Russia on 2020-11-15, so we group by location and select the latest date we have for that location in the `df_tests` dataset:
+
+```python
+df_tests_per_k = df_tests.loc[df_tests.groupby('location').date.idxmax()][['location', 'date', 'total_tests_per_thousand']].sort_values(by='total_tests_per_thousand', ascending=False)[0:top_N].reset_index(drop=True)
+df_tests_per_k
+```
+
+|    | location       | date                |   total_tests_per_thousand |
+|---:|:---------------|:--------------------|---------------------------:|
+|  0 | United States  | 2020-11-13 00:00:00 |                    501.625 |
+|  1 | United Kingdom | 2020-11-12 00:00:00 |                    482.174 |
+|  2 | Russia         | 2020-11-15 00:00:00 |                    473.582 |
+|  3 | Belgium        | 2020-11-14 00:00:00 |                    473.328 |
+|  4 | Portugal       | 2020-11-11 00:00:00 |                    379.613 |
+|  5 | Australia      | 2020-11-15 00:00:00 |                    367.819 |
+|  6 | Spain          | 2020-11-05 00:00:00 |                    321.321 |
+|  7 | Italy          | 2020-11-15 00:00:00 |                    312.236 |
+|  8 | Germany        | 2020-11-08 00:00:00 |                    298.511 |
+|  9 | Canada         | 2020-11-15 00:00:00 |                    274.177 |
+
+We see that the US is leading the way in tests performed per 1000, so it shouldn't really be that surprising that case numbers are higher too. This may partly explain why the US has the highest per million case count but not the highest per million death rate.
+
+Let's try and further normalize the cases per million by the tests per thousand?
+
+```python
+df_tests_per_k = df_tests.loc[df_tests.groupby('location').date.idxmax()][['location', 'population', 'date', 'total_cases_per_million', 'total_tests_per_thousand']]
+
+df_tests_per_k['total_cases_per_million_per_tests_per_thousand'] = df_tests_per_k['total_cases_per_million']/df_tests_per_k['total_tests_per_thousand']
+
+
+df_tests_per_k = df_tests_per_k.sort_values(by='total_cases_per_million_per_tests_per_thousand', ascending=False)[0:top_N].reset_index(drop=True)
+df_tests_per_k
+```
+
+|    | location           |   population | date                |   total_cases_per_million |   total_tests_per_thousand |   total_cases_per_million_per_tests_per_thousand |
+|---:|:-------------------|-------------:|:--------------------|--------------------------:|---------------------------:|-------------------------------------------------:|
+|  0 | Peru               |  3.29718e+07 | 2020-09-05 00:00:00 |                 20528.1   |                     19.123 |                                         1073.47  |
+|  1 | Brazil             |  2.12559e+08 | 2020-09-19 00:00:00 |                 21147.9   |                     30.21  |                                          700.029 |
+|  2 | Mexico             |  1.28933e+08 | 2020-11-09 00:00:00 |                  7506.43  |                     17.149 |                                          437.718 |
+|  3 | Bolivia            |  1.1673e+07  | 2020-11-13 00:00:00 |                 12241     |                     29.393 |                                          416.458 |
+|  4 | Ecuador            |  1.76431e+07 | 2020-11-13 00:00:00 |                 10061.4   |                     30.555 |                                          329.287 |
+|  5 | Colombia           |  5.08829e+07 | 2020-11-11 00:00:00 |                 22732.1   |                     89.101 |                                          255.127 |
+|  6 | Guatemala          |  1.79156e+07 | 2020-11-13 00:00:00 |                  6337.67  |                     26.627 |                                          238.017 |
+|  7 | Dominican Republic |  1.08479e+07 | 2020-11-09 00:00:00 |                 12000.7   |                     58.011 |                                          206.869 |
+|  8 | Madagascar         |  2.7691e+07  | 2020-11-07 00:00:00 |                   621.609 |                      3.322 |                                          187.119 |
+|  9 | Bangladesh         |  1.64689e+08 | 2020-11-15 00:00:00 |                  2613.99  |                     15.417 |                                          169.552 |
+
+
+When normalized in terms of how many tests performed Peru and Brazil come out at the top. The US is all the way down at number 34 and the UK at 45. These are countries where a lot of testing was done and case numbers are also high. Brazil, on the other hand, did relatively few tests, but also has high case counts per million.
+
+This is not to say however that the impact on the US and UK is solely an artefact of more testing; as we have seen, these countries also show very high in the death rate - which is obviously independent of how many tests a country does.
+
+
 # The increase in Covid 
 
 ## Evolution in terms of case numbers
