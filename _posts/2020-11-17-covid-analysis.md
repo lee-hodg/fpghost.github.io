@@ -5,13 +5,10 @@ categories:
   - blog
 tags:
   - Data-science
+toc: true
+toc_sticky: true
 header:
-  overlay_image: /assets/images/coronavirus.jpg
-  overlay_filter: 0.5 # same as adding an opacity of 0.5 to a black background
-  caption: "Analysis of the COVID-19 Situation"
-  actions:
-    - label: "More Info"
-      url: "https://en.wikipedia.org/wiki/Kelly_criterion"
+  image: /assets/images/coronavirus.jpg
 ---
 
 # What insights can we gain from data into the COVID-19 situation?
@@ -22,4 +19,268 @@ The purpose of this blog post is to try to gain some insights about Coronavirus 
 
 The data was obtained from [Our World In Data](https://ourworldindata.org/coronavirus), a scientific online publication whose research team is based at the University of Oxford and focuses on large global problems. 
 
+# Loading the dataset
+
+```python
+# import libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import requests
+```
+
+Here we first import the libraries that we will use and next
+we use the nice pandas `read_csv` method, which will load directly the data
+
+```python
+# import dataset and create a data frame
+df = pd.read_csv('https://covid.ourworldindata.org/data/owid-covid-data.csv')
+```
 # Data exploration
+
+## At a glance
+
+Taking a look at our data with `df.head()` shows
+
+|    | iso_code   | continent   | location    | date       |   total_cases |   new_cases |   new_cases_smoothed |   total_deaths |   new_deaths |   new_deaths_smoothed |   total_cases_per_million |   new_cases_per_million |   new_cases_smoothed_per_million |   total_deaths_per_million |   new_deaths_per_million |   new_deaths_smoothed_per_million |   reproduction_rate |   icu_patients |   icu_patients_per_million |   hosp_patients |   hosp_patients_per_million |   weekly_icu_admissions |   weekly_icu_admissions_per_million |   weekly_hosp_admissions |   weekly_hosp_admissions_per_million |   total_tests |   new_tests |   total_tests_per_thousand |   new_tests_per_thousand |   new_tests_smoothed |   new_tests_smoothed_per_thousand |   tests_per_case |   positive_rate |   tests_units |   stringency_index |   population |   population_density |   median_age |   aged_65_older |   aged_70_older |   gdp_per_capita |   extreme_poverty |   cardiovasc_death_rate |   diabetes_prevalence |   female_smokers |   male_smokers |   handwashing_facilities |   hospital_beds_per_thousand |   life_expectancy |   human_development_index |
+|---:|:-----------|:------------|:------------|:-----------|--------------:|------------:|---------------------:|---------------:|-------------:|----------------------:|--------------------------:|------------------------:|---------------------------------:|---------------------------:|-------------------------:|----------------------------------:|--------------------:|---------------:|---------------------------:|----------------:|----------------------------:|------------------------:|------------------------------------:|-------------------------:|-------------------------------------:|--------------:|------------:|---------------------------:|-------------------------:|---------------------:|----------------------------------:|-----------------:|----------------:|--------------:|-------------------:|-------------:|---------------------:|-------------:|----------------:|----------------:|-----------------:|------------------:|------------------------:|----------------------:|-----------------:|---------------:|-------------------------:|-----------------------------:|------------------:|--------------------------:|
+|  0 | AFG        | Asia        | Afghanistan | 2019-12-31 |           nan |           0 |                  nan |            nan |            0 |                   nan |                       nan |                       0 |                              nan |                        nan |                        0 |                               nan |                 nan |            nan |                        nan |             nan |                         nan |                     nan |                                 nan |                      nan |                                  nan |           nan |         nan |                        nan |                      nan |                  nan |                               nan |              nan |             nan |           nan |                nan |  3.89283e+07 |               54.422 |         18.6 |           2.581 |           1.337 |          1803.99 |               nan |                 597.029 |                  9.59 |              nan |            nan |                   37.746 |                          0.5 |             64.83 |                     0.498 |
+|  1 | AFG        | Asia        | Afghanistan | 2020-01-01 |           nan |           0 |                  nan |            nan |            0 |                   nan |                       nan |                       0 |                              nan |                        nan |                        0 |                               nan |                 nan |            nan |                        nan |             nan |                         nan |                     nan |                                 nan |                      nan |                                  nan |           nan |         nan |                        nan |                      nan |                  nan |                               nan |              nan |             nan |           nan |                  0 |  3.89283e+07 |               54.422 |         18.6 |           2.581 |           1.337 |          1803.99 |               nan |                 597.029 |                  9.59 |              nan |            nan |                   37.746 |                          0.5 |             64.83 |                     0.498 |
+|  2 | AFG        | Asia        | Afghanistan | 2020-01-02 |           nan |           0 |                  nan |            nan |            0 |                   nan |                       nan |                       0 |                              nan |                        nan |                        0 |                               nan |                 nan |            nan |                        nan |             nan |                         nan |                     nan |                                 nan |                      nan |                                  nan |           nan |         nan |                        nan |                      nan |                  nan |                               nan |              nan |             nan |           nan |                  0 |  3.89283e+07 |               54.422 |         18.6 |           2.581 |           1.337 |          1803.99 |               nan |                 597.029 |                  9.59 |              nan |            nan |                   37.746 |                          0.5 |             64.83 |                     0.498 |
+|  3 | AFG        | Asia        | Afghanistan | 2020-01-03 |           nan |           0 |                  nan |            nan |            0 |                   nan |                       nan |                       0 |                              nan |                        nan |                        0 |                               nan |                 nan |            nan |                        nan |             nan |                         nan |                     nan |                                 nan |                      nan |                                  nan |           nan |         nan |                        nan |                      nan |                  nan |                               nan |              nan |             nan |           nan |                  0 |  3.89283e+07 |               54.422 |         18.6 |           2.581 |           1.337 |          1803.99 |               nan |                 597.029 |                  9.59 |              nan |            nan |                   37.746 |                          0.5 |             64.83 |                     0.498 |
+|  4 | AFG        | Asia        | Afghanistan | 2020-01-04 |           nan |           0 |                  nan |            nan |            0 |                   nan |                       nan |                       0 |                              nan |                        nan |                        0 |                               nan |                 nan |            nan |                        nan |             nan |                         nan |                     nan |                                 nan |                      nan |                                  nan |           nan |         nan |                        nan |                      nan |                  nan |                               nan |              nan |             nan |           nan |                  0 |  3.89283e+07 |               54.422 |         18.6 |           2.581 |           1.337 |          1803.99 |               nan |                 597.029 |                  9.59 |              nan |            nan |                   37.746 |                          0.5 |             64.83 |                     0.498 |
+
+
+
+We can use
+
+```
+print(f'The DataFrame has {df.shape[0]} rows and {df.shape[1]} columns')
+```
+to tell us about how many rows and columns our dataframe has:
+```
+The DataFrame has 57394 rows and 50 columns
+```
+
+We see that the data consists of multiple rows per country for various dates, and each entry specifies a lot of information about the state of coronavirus in that country at that date, such as the total cases recorded so far, the total deaths so far and so on.
+
+## What columns do we have exactly?
+
+`', '.join([col for col in df.columns])` shows us that we have 
+
+```
+iso_code, continent, location, date, total_cases, new_cases, new_cases_smoothed, total_deaths, new_deaths, new_deaths_smoothed, total_cases_per_million, new_cases_per_million, new_cases_smoothed_per_million, total_deaths_per_million, new_deaths_per_million, new_deaths_smoothed_per_million, reproduction_rate, icu_patients, icu_patients_per_million, hosp_patients, hosp_patients_per_million, weekly_icu_admissions, weekly_icu_admissions_per_million, weekly_hosp_admissions, weekly_hosp_admissions_per_million, total_tests, new_tests, total_tests_per_thousand, new_tests_per_thousand, new_tests_smoothed, new_tests_smoothed_per_thousand, tests_per_case, positive_rate, tests_units, stringency_index, population, population_density, median_age, aged_65_older, aged_70_older, gdp_per_capita, extreme_poverty, cardiovasc_death_rate, diabetes_prevalence, female_smokers, male_smokers, handwashing_facilities, hospital_beds_per_thousand, life_expectancy, human_development_index```
+```
+
+## What are the types for these columns?
+
+```
+df.dtypes
+```
+
+shows us this 
+
+```
+iso_code                               object
+continent                              object
+location                               object
+date                                   object
+total_cases                           float64
+new_cases                             float64
+new_cases_smoothed                    float64
+total_deaths                          float64
+new_deaths                            float64
+new_deaths_smoothed                   float64
+total_cases_per_million               float64
+new_cases_per_million                 float64
+new_cases_smoothed_per_million        float64
+total_deaths_per_million              float64
+new_deaths_per_million                float64
+new_deaths_smoothed_per_million       float64
+reproduction_rate                     float64
+icu_patients                          float64
+icu_patients_per_million              float64
+hosp_patients                         float64
+hosp_patients_per_million             float64
+weekly_icu_admissions                 float64
+weekly_icu_admissions_per_million     float64
+weekly_hosp_admissions                float64
+weekly_hosp_admissions_per_million    float64
+total_tests                           float64
+new_tests                             float64
+total_tests_per_thousand              float64
+new_tests_per_thousand                float64
+new_tests_smoothed                    float64
+new_tests_smoothed_per_thousand       float64
+tests_per_case                        float64
+positive_rate                         float64
+tests_units                            object
+stringency_index                      float64
+population                            float64
+population_density                    float64
+median_age                            float64
+aged_65_older                         float64
+aged_70_older                         float64
+gdp_per_capita                        float64
+extreme_poverty                       float64
+cardiovasc_death_rate                 float64
+diabetes_prevalence                   float64
+female_smokers                        float64
+male_smokers                          float64
+handwashing_facilities                float64
+hospital_beds_per_thousand            float64
+life_expectancy                       float64
+human_development_index               float64
+```
+## Cleanup
+
+In particular we want to ensure the data column is actually a pandas date type and not just a string
+
+```
+df.date = pd.to_datetime(df.date)
+```
+
+Now if we run `df.dtypes` again we'd see `date datetime64[ns]` as we desire.
+
+## Missing data?
+
+We can check out which our columns typically has a lot of missing data by running the command
+
+```
+(df.isnull().sum()/df.shape[0]).sort_values(ascending=False) * 100
+```
+
+Which will compute the percentage of null values per column and sort the columns by those with the highest percentage of null values at the top:
+
+
+|                                    |         0 |
+|:-----------------------------------|----------:|
+| weekly_icu_admissions_per_million  | 99.378    |
+| weekly_icu_admissions              | 99.378    |
+| weekly_hosp_admissions             | 98.8762   |
+| weekly_hosp_admissions_per_million | 98.8762   |
+| icu_patients                       | 92.1769   |
+| icu_patients_per_million           | 92.1769   |
+| hosp_patients_per_million          | 91.2796   |
+| hosp_patients                      | 91.2796   |
+| new_tests                          | 62.0396   |
+| new_tests_per_thousand             | 62.0396   |
+| total_tests                        | 61.6388   |
+| total_tests_per_thousand           | 61.6388   |
+| tests_per_case                     | 60.2711   |
+| positive_rate                      | 59.5585   |
+| handwashing_facilities             | 57.8771   |
+| new_tests_smoothed                 | 57.1175   |
+| new_tests_smoothed_per_thousand    | 57.1175   |
+| tests_units                        | 55.4448   |
+| extreme_poverty                    | 41.5078   |
+| reproduction_rate                  | 34.3207   |
+| male_smokers                       | 31.7768   |
+| female_smokers                     | 30.883    |
+| total_deaths_per_million           | 23.1697   |
+| total_deaths                       | 22.6958   |
+| hospital_beds_per_thousand         | 19.9638   |
+| stringency_index                   | 16.6341   |
+| human_development_index            | 14.1949   |
+| aged_65_older                      | 12.4212   |
+| gdp_per_capita                     | 12.2434   |
+| aged_70_older                      | 11.5448   |
+| cardiovasc_death_rate              | 11.1179   |
+| median_age                         | 11.0813   |
+| diabetes_prevalence                |  7.86319  |
+| total_cases_per_million            |  6.83521  |
+| total_cases                        |  6.33516  |
+| population_density                 |  5.2671   |
+| new_deaths_smoothed_per_million    |  3.14841  |
+| new_cases_smoothed_per_million     |  3.14841  |
+| new_cases_smoothed                 |  3.03516  |
+| new_deaths_smoothed                |  3.03516  |
+| life_expectancy                    |  1.8434   |
+| new_cases_per_million              |  1.73015  |
+| new_deaths_per_million             |  1.73015  |
+| new_deaths                         |  1.61864  |
+| new_cases                          |  1.61864  |
+| continent                          |  1.12555  |
+| population                         |  0.562777 |
+| iso_code                           |  0.562777 |
+| date                               |  0        |
+| location                           |  0        |
+
+
+This tells us that the dataset seems to be quite lacking when it comes to information about ICU and hospital patients in particular (both weekly admissions and the counts of them in general), with over 90% of entries have null values for these columns. Following that around 60% of our rows are missing data about testing.
+
+If we were going to use those columns as features to some ML algorithm we would have to think about how to handle those empty values. Whether to simply drop those columns or to impute the missing values using the mean for example.
+
+# What countries are most affected by COVID-19?
+
+To kick-off this analysis, let's look at which countries around the world seem to have suffered the most with COVID-19.
+
+## By total cases
+
+The first metric we will use to answer that question is the total case numbers per country.
+
+As a convenience we define today's date as
+
+```
+today = pd.Timestamp("today").strftime("%Y-%m-%d")
+top_N = 10
+```
+
+and then get the `top_N` countries by `total_cases` column as measured at today's date:
+
+```
+top_cases = df.loc[df['date'] == today, ['location', 'total_cases']].sort_values(by='total_cases', ascending=False)[1:top_N+1].reset_index(drop=True)
+top_cases
+```
+
+Here `df.loc` selects rows matching today's date and keeps just the `location` and `total_cases` column. We then sort by the `total_cases` with the most cases at the top, and keep just the `top_N=10` countries. Finally the index is reset so that we see `0, 1, 2..,9` for example instead of the original indices.
+
+The result is 
+
+
+|    | location       |   total_cases |
+|---:|:---------------|--------------:|
+|  0 | United States  |   1.12055e+07 |
+|  1 | India          |   8.87429e+06 |
+|  2 | Brazil         |   5.87646e+06 |
+|  3 | France         |   1.99123e+06 |
+|  4 | Russia         |   1.97101e+06 |
+|  5 | United Kingdom |   1.39068e+06 |
+|  6 | Argentina      |   1.31837e+06 |
+|  7 | Italy          |   1.20588e+06 |
+|  8 | Colombia       |   1.20522e+06 |
+|  9 | Mexico         |   1.0094e+06  |
+
+
+The US has the highest number of cases in the world with over 11 million on the 17th Nov 2020, followed by India with almost 9M, and then Brazil with almost 6M.
+
+Let's next compute how many worldwide cases there are
+
+```
+world_cases = df[(df['date'] == today) &  (df['location']=='World')].iloc[0]['total_cases']
+print(f'There are {world_cases:,} worldwide cases')
+```
+
+Which tells us that there are  55,154,651 worldwide cases. 
+
+Let's make this even clearer with a plot:
+
+```
+# create the matplotlib figure instance
+fig, ax = plt.subplots(figsize=(10, 6))
+sns.set()
+
+# plot with seaborn
+ax = sns.barplot('location', y='total_cases', data=top_cases,
+                 palette='flare')
+ax.set_title(f'COVID-19 - Top countries in number of cases - {today}', fontsize=14)
+ax.set_xlabel('Country')
+
+ax.set_ylabel('Total Cases (tens of millions)')
+plt.tight_layout()
+plt.savefig('graph1.png')
+plt.xticks(rotation=45)
+```
+
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/cov_graph1.jpg)
