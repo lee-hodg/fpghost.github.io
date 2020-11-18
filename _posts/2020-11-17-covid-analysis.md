@@ -420,3 +420,58 @@ plt.savefig('graph_death_evo.png')
 ```
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/graph_death_evo.png)
+
+
+# A closer look at Brazil
+
+Brazil has been something of an exception to most countries in the world. President Bolsonero is not a fan of lockdowns and the policy in Brazil was much more relaxed than
+most countries around the globe. Borders reopened around July and tourism has been allowed since that time.
+
+
+```python
+# Data for just Brazil
+df_brazil = df.loc[df['location'] == 'Brazil'].copy()
+df_brazil.set_index('date', inplace=True)
+```
+
+When did Brazil record its first case and first death?
+
+```
+first_case_br = df_brazil.loc[df_brazil['total_cases'] == 1, ['total_cases']].sort_values(by='date').head(1)
+first_death_br = df_brazil.loc[df_brazil['total_deaths'] == 1, ['total_deaths']].sort_values(by='date').head(1)
+```
+
+Shows us that the first case was on 2020-02-26 and the first death was on 
+2020-03-18 
+
+## Let's check the lag between cases reported and total deaths for Brazil
+
+
+```python
+
+# create the matplotlib figure instance
+fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(17, 7))
+
+# linear scale
+ax[0].plot('total_deaths', data=df_brazil)
+ax[0].plot('total_cases', data=df_brazil)
+ax[0].set_title('Evolution of COVID-19 in Brazil - Linear Scale', fontsize=14)
+ax[0].set_xlabel('Date')
+ax[0].set_ylabel('Number of Cases/Casualties (million)')
+ax[0].legend()
+
+# logarithmic scale
+plt.yscale('log')
+ax[1].plot('total_deaths', data=df_brazil)
+ax[1].plot('total_cases', data=df_brazil)
+ax[1].set_title('Evolution of COVID-19 in Brazil - Logarithmic Scale', fontsize=14)
+ax[1].set_xlabel('Date')
+ax[1].legend()
+
+plt.tight_layout(pad=3.0)
+plt.savefig('brazil_case_death_lag.png')
+```
+
+Since the case numbers are much more than the deaths, the second plot here uses a log scale on the y-axis to better highlight the relation in time between case numbers and deaths.
+
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/brazil_case_death_lag.png)
