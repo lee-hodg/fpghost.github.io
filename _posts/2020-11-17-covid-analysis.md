@@ -1,5 +1,5 @@
 ---
-title: "COVID-19 Analysis"
+title: "COVID-19 Analysis: what can the data tell us?"
 date: 2020-11-17T20:00:00
 categories:
   - blog
@@ -10,13 +10,11 @@ toc_sticky: true
 header:
   overlay_image: /assets/images/coronavirus.jpg
   overlay_filter: 0.5 # same as adding an opacity of 0.5 to a black background
-  caption: ": What can the data tell us?"
   actions:
     - label: "Notebook"
       url: "https://github.com/lee-hodg/Covid19Study/blob/master/CovidStudy.ipynb"
 ---
 
-# What insights can we gain from data into the COVID-19 situation?
 
 This year, 2020, has been like no other in living memory. Coronavirus has shaken our collective sense of what normality means and will undoubtedly continue to affect the world for years to come in one way or another.
 
