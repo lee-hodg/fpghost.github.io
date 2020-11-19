@@ -81,7 +81,7 @@ Case numbers are bound to increase the more tests that are done by a country. Le
 
 Was President Trump correct to assert that the US leads the world in terms of Covid testing done? 
 
-Again we will filter out countries with populations less than 10M. Moreover, each country may have recorded the latest data for this statistic on slightly different days, so the analysis takes the most recent date.
+Again I will filter out countries with populations less than 10M. Moreover, each country may have recorded the latest data for this statistic on slightly different days, so the analysis takes the most recent date.
 
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/covid_tests_per_thousand.png)
@@ -140,7 +140,7 @@ We see that there is a lag between total cases and total deaths that appears to 
 
 The data to measure the economic impact was obtained from OECD.Stat OECD's quarterly national accounts data, available at [OECD.stat](https://stats.oecd.org/Index.aspx?DatasetCode=SNA_TABLE1#)
 
-We will compute the percentage change in GDP compared with the same quarter of the previous year (Q2 2019) to try to get an idea of which countries suffered the most economic impact from Covid-19.
+I will compute the percentage change in GDP compared with the same quarter of the previous year (Q2 2019) to try to get an idea of which countries suffered the most economic impact from Covid-19.
 
 
 I chose to look at GDP measured by the "output approach" to calculate GDP. It sums the gross value added of various sectors, plus taxes and less subsidies on products. 
@@ -186,7 +186,7 @@ Sweden also seems to be doing worse on this metric than its neighbours.
 
 The UK went into its first national lockdown on 23 March 2020, and the second lockdown began on the 5 Nov 2020.
 
-In this section we will take a look at what impact if any these lockdowns had on the rising daily case numbers.
+In this section I will take a look at what impact if any these lockdowns had on the rising daily case numbers.
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/uk_lockdowns_1st_deaths.png)
 
