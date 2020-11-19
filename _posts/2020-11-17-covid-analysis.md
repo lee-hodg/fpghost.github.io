@@ -284,7 +284,7 @@ Again we will filter out countries with populations less than 10M, and since the
 Each country will have reported the latest `total_tests_per_thousand` on different dates. For example the UK reported it last on 2020-11-12 and Russia on 2020-11-15, so we group by location and select the latest date we have for that location in the `df_tests` dataset. This means that the date of the statistic will not be the same for all countries and means the comparison isn't perfect, but it seems the dates are not more than a few days different.
 
 
-```
+
 
 |    | location       | date                |   total_tests_per_thousand |
 |---:|:---------------|:--------------------|---------------------------:|
