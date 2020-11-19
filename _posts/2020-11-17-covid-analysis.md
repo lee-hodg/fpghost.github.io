@@ -23,7 +23,7 @@ The purpose of this blog post is to try to gain some insights about Coronavirus 
 
 The data was obtained from [Our World In Data](https://ourworldindata.org/coronavirus), a scientific online publication whose research team is based at the University of Oxford and focuses on large global problems. 
 
-## Objectives and questions to be answered
+# Objectives and questions to be answered
 
 I will attempt to answer:
 
