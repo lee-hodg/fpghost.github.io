@@ -119,11 +119,11 @@ Peru is the next most affected and has seen a fairly steady increase in deaths p
 
 Spain has also been very badly affected and just like Belgium has entered into a second wave as the European winter begins.
 
-Argentina seems to be a late bloomer. Despite their initial hard and strict lockdowns, it seems since around August the death rate per million has exploded there.
+Argentina seems to be a late bloomer. Despite their initial hard and strict lockdown, it seems since around August the death rate per million has exploded there.
 
 # A closer look at Brazil
 
-Brazil has been something of an exception to most countries in the world. President Bolsonaro is not a fan of lockdowns and the policy in Brazil was much more relaxed than
+Brazil has been something of an exception to most countries in the world. President Bolsonaro is [not a fan of lockdowns](https://www.theguardian.com/world/2020/mar/23/brazils-jair-bolsonaro-says-coronavirus-crisis-is-a-media-trick) and the policy in Brazil was much more relaxed than
 most countries around the globe. Borders reopened around July and tourism has been allowed since that time.
 
 Brazil recorded its first case on 2020-02-26 and its first death was on 2020-03-18 
