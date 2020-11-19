@@ -88,6 +88,10 @@ Again we will filter out countries with populations less than 10M. Moreover, eac
 
 We see that the US is leading the way in tests performed per 1000 people, so it shouldn't be that surprising that their case numbers are higher too. This may partly explain why the US has the highest per million case count but doesn't appear in the top 10 in terms of per million death rate.
 
+Trump had [tweeted](https://twitter.com/realDonaldTrump/status/1260166181513842688 ) on the 12th of May that the US had carried out more tests than every other country in the world combined. 
+
+The analysis showed that this was indeed true. The US had done over 10M tests on this date. The country with the next most tests was Russia with nearly 6M. However the rest of the world combined had still done more tests than the US, with over 35M tests at this date.
+
 
 # The increase in Covid 
 
