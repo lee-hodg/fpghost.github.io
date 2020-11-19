@@ -22,24 +22,24 @@ The purpose of this blog post is to try to gain some insights about Coronavirus 
 
 The data was obtained from [Our World In Data](https://ourworldindata.org/coronavirus), a scientific online publication whose research team is based at the University of Oxford and focuses on large global problems. 
 
-# Loading the dataset
+## Objectives and questions to be answered
 
-```python
-# import libraries
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-import requests
-```
+I will attempt to answer:
 
-Here we first import the libraries that we will use and next
-we use the nice pandas `read_csv` method, which will load directly the data
+- Which countries were most affected by Covid-19 (In terms of total case numbers and total death counts)?
+- What percentage of worldwide cases is accounted for by the top 10 countries by case numbers?
+- If we account for population size of a country by looking at cases/deaths per million of the population, which countries were most affected?
+- Which countries did the most testing for Covid 19?
+- How did the rise of Covid look? Does it come in waves?
+- How did lockdowns, in particular the UK lockdown, affect the rise in new deaths? How long did it take for the daily death rates to slow down after the UK lockdowns?
+- Which countries suffered the most economic impact as measured by the Q2 2020 vs Q2 2019 GDP decrease?
+- A closer look at Brazil: how did the lack of lockdown fare for Brasil?
+- A close look at Scandinavia and Sweden: how did the Swedish policy fare compared to its neighbours?
 
-```python
-# import dataset and create a data frame
-df = pd.read_csv('https://covid.ourworldindata.org/data/owid-covid-data.csv')
-```
+# The dataset
+
+The dataset is taken from https://covid.ourworldindata.org/data/owid-covid-data.csv and loaded into `pandas` for processing.
+
 # Data exploration
 
 ## At a glance
@@ -56,33 +56,13 @@ Taking a look at our data with `df.head()` shows
 
 
 
-We can use
+We can see that the DataFrame has 57394 rows and 50 columns
+The data consists of multiple rows per country for various dates, and each entry specifies a lot of information about the state of coronavirus in that country at that date, such as the total cases recorded so far, the total deaths so far and so on.
 
-```
-print(f'The DataFrame has {df.shape[0]} rows and {df.shape[1]} columns')
-```
-to tell us about how many rows and columns our dataframe has:
-```
-The DataFrame has 57394 rows and 50 columns
-```
+## Columns and their types?
 
-We see that the data consists of multiple rows per country for various dates, and each entry specifies a lot of information about the state of coronavirus in that country at that date, such as the total cases recorded so far, the total deaths so far and so on.
+The columns we have along with their types are explicitly
 
-## What columns do we have exactly?
-
-`', '.join([col for col in df.columns])` shows us that we have 
-
-```
-iso_code, continent, location, date, total_cases, new_cases, new_cases_smoothed, total_deaths, new_deaths, new_deaths_smoothed, total_cases_per_million, new_cases_per_million, new_cases_smoothed_per_million, total_deaths_per_million, new_deaths_per_million, new_deaths_smoothed_per_million, reproduction_rate, icu_patients, icu_patients_per_million, hosp_patients, hosp_patients_per_million, weekly_icu_admissions, weekly_icu_admissions_per_million, weekly_hosp_admissions, weekly_hosp_admissions_per_million, total_tests, new_tests, total_tests_per_thousand, new_tests_per_thousand, new_tests_smoothed, new_tests_smoothed_per_thousand, tests_per_case, positive_rate, tests_units, stringency_index, population, population_density, median_age, aged_65_older, aged_70_older, gdp_per_capita, extreme_poverty, cardiovasc_death_rate, diabetes_prevalence, female_smokers, male_smokers, handwashing_facilities, hospital_beds_per_thousand, life_expectancy, human_development_index```
-```
-
-## What are the types for these columns?
-
-```
-df.dtypes
-```
-
-shows us this 
 
 ```
 iso_code                               object
@@ -148,13 +128,7 @@ Now if we run `df.dtypes` again we'd see `date datetime64[ns]` as we desire.
 
 ## Missing data?
 
-We can check out which our columns typically has a lot of missing data by running the command
-
-```
-(df.isnull().sum()/df.shape[0]).sort_values(ascending=False) * 100
-```
-
-Which will compute the percentage of null values per column and sort the columns by those with the highest percentage of null values at the top:
+Let's check out which columns tend to be missing data
 
 
 |                                    |         0 |
@@ -223,23 +197,7 @@ To kick-off this analysis, let's look at which countries around the world seem t
 
 The first metric we will use to answer that question is the total case numbers per country.
 
-As a convenience we define today's date as
-
-```
-today = pd.Timestamp("today").strftime("%Y-%m-%d")
-top_N = 10
-```
-
-and then get the `top_N` countries by `total_cases` column as measured at today's date:
-
-```
-top_cases = df.loc[df['date'] == today, ['location', 'total_cases']].sort_values(by='total_cases', ascending=False)[1:top_N+1].reset_index(drop=True)
-top_cases
-```
-
-Here `df.loc` selects rows matching today's date and keeps just the `location` and `total_cases` column. We then sort by the `total_cases` with the most cases at the top, and keep just the `top_N=10` countries. Finally the index is reset so that we see `0, 1, 2..,9` for example instead of the original indices.
-
-The result is 
+The resulting table is 
 
 
 |    | location       |   total_cases |
@@ -258,33 +216,9 @@ The result is
 
 The US has the highest number of cases in the world with over 11 million on the 17th Nov 2020, followed by India with almost 9M, and then Brazil with almost 6M.
 
-Let's next compute how many worldwide cases there are
-
-```
-world_cases = df[(df['date'] == today) &  (df['location']=='World')].iloc[0]['total_cases']
-print(f'There are {world_cases:,} worldwide cases')
-```
-
-Which tells us that there are  55,154,651 worldwide cases. 
+We can also compute that there are  55,154,651 worldwide cases. 
 
 Let's make this even clearer with a plot:
-
-```
-# create the matplotlib figure instance
-fig, ax = plt.subplots(figsize=(10, 6))
-sns.set()
-
-# plot with seaborn
-ax = sns.barplot('location', y='total_cases', data=top_cases,
-                 palette='flare')
-ax.set_title(f'COVID-19 - Top countries in number of cases - {today}', fontsize=14)
-ax.set_xlabel('Country')
-
-ax.set_ylabel('Total Cases (tens of millions)')
-plt.tight_layout()
-plt.savefig('graph1.png')
-plt.xticks(rotation=45)
-```
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/cov_graph1.png)
 
@@ -296,12 +230,8 @@ For that reason, let's look at the total cases per million of the population.
 
 Also given that some countries (such as Aruba) have utterly tiny populations per capita case numbers may not be so meaningful for them, so we filter out any countries with a population smaller than 10M. 
 
-```python
-# top  countries - cases
-top_cases_per_m = df.loc[(df['date'] == today) & (df['population'] > 10000000), ['location', 'population', 'total_cases_per_million']].sort_values(by='total_cases_per_million', ascending=False)[1:top_N+1].reset_index(drop=True)
-pd.set_option('float_format', '{:,}'.format)
-top_cases_per_m
-```
+Doing so we see the table:
+
 
 |    | location       |   population |   total_cases_per_million |
 |---:|:---------------|-------------:|--------------------------:|
@@ -316,17 +246,14 @@ top_cases_per_m
 |  8 | Portugal       |  1.01967e+07 |                   22131.9 |
 |  9 | United Kingdom |  6.7886e+07  |                   20485.5 |
 
+and we can better visualize that with a plot
+
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/cov_graph2.png)
 
 ## By deaths per million
 
-Similarly, let's try to measure the impact of Covid-19 on a country by considering the death rate per million.
+Similarly, let's try to measure the impact of Covid-19 on a country by considering the death rate per million. This is important as the cases is not the whole story. For example if a country does much more testing than another country then we may expect them to have recorded more tests too
 
-```python
-top_deaths_per_m = df.loc[(df['date'] == today) & (df['population'] > 10000000), ['location', 'population', 'total_deaths_per_million']].sort_values(by='total_deaths_per_million', ascending=False)[1:top_N+1].reset_index(drop=True)
-pd.set_option('float_format', '{:,}'.format)
-top_deaths_per_m
-```
 
 |    | location       |   population |   total_deaths_per_million |
 |---:|:---------------|-------------:|---------------------------:|
@@ -344,34 +271,19 @@ top_deaths_per_m
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/cov_graph3.png)
 
-One other thing we can look at is the proportion of the worldwide deaths came from the top ten countries by death count:
-
-```python
-world_deaths = df[(df['date'] == today) &  (df['location']=='World')].iloc[0]['total_deaths']
-world_deaths
-top_deaths_sum = df.loc[(df['date'] == today), ['location', 'total_deaths']].sort_values(by='total_deaths', ascending=False)[1:top_N+1]['total_deaths'].sum()
-top_deaths_sum
-print(f'We have {world_deaths:,} worldwide deaths from of COVID on {today}. And {100*top_deaths_sum/world_deaths: .2f}% came from the {top_N} countries')
-```
-
-We have 1,328,537.0 worldwide deaths from of COVID on 2020-11-17. And  67.63% came from the 10 countries.
+One other thing we can look at is the proportion of the worldwide deaths came from the top ten countries by death count: We have 1,328,537.0 worldwide deaths from of COVID on 2020-11-17. And  67.63% came from the 10 countries.
 
 
 ## Testing per thousand
 
-Case numbers are bound to increase the more tests that are done by a country. Let's check out countries by how many tests per thousand of the population have been carried out.
+Case numbers are bound to increase the more tests that are done by a country. Let's check out countries by how many tests per thousand of the population have been carried out. 
+Was President Trump correct to assert that the US leads to world in terms of Covid testing done?
 
 Again we will filter out countries with populations less than 10M, and since the testing columns often have null data we need to be careful to select only rows with non-nulls for this column:
 
-```python
-df_tests = df[(df['total_tests_per_thousand'].isnull() == False) & (df['population'] > 10000000) ]
-```
+Each country will have reported the latest `total_tests_per_thousand` on different dates. For example the UK reported it last on 2020-11-12 and Russia on 2020-11-15, so we group by location and select the latest date we have for that location in the `df_tests` dataset. This means that the date of the statistic will not be the same for all countries and means the comparison isn't perfect, but it seems the dates are not more than a few days different.
 
-Each country will have reported the latest `total_tests_per_thousand` on different dates. For example the UK reported it last on 2020-11-12 and Russia on 2020-11-15, so we group by location and select the latest date we have for that location in the `df_tests` dataset:
 
-```python
-df_tests_per_k = df_tests.loc[df_tests.groupby('location').date.idxmax()][['location', 'date', 'total_tests_per_thousand']].sort_values(by='total_tests_per_thousand', ascending=False)[0:top_N].reset_index(drop=True)
-df_tests_per_k
 ```
 
 |    | location       | date                |   total_tests_per_thousand |
@@ -426,26 +338,6 @@ This is not to say however that the impact on the US and UK is solely an artefac
 
 We can get an idea of the speed covid spread per country by plotting the time series of the case count. To keep the charts uncluttered we will do this for just the 5 countries with the most cases
 
-```python
-top_evo_cases = df.copy()
-top_evo_cases.set_index('location', inplace = True)
-top_evo_cases = top_evo_cases.loc[top_5_cases_country_names]
-top_evo_cases = top_evo_cases.reset_index()
-
-# create the matplotlib figure instance
-fig, ax = plt.subplots(figsize=(18, 9))
-
-# plot with seaborn
-ax = sns.lineplot(x='date', y='total_cases', hue='location', data=top_evo_cases,  palette='colorblind');
-ax.set_title('COVID-19 - Total of cases per country', fontsize=14)
-ax.set_xlabel('Date')
-ax.set_ylabel('Number of Cases (ten million)')
-
-plt.tight_layout()
-plt.savefig('cov_evo_cases.png')
-```
-
-
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/cov_evo_cases.png)
 
 The number of cases starting increasing around mid to late March for the US, with upticks around July and again in October, showing no sign of levelling off.
@@ -458,28 +350,6 @@ The UK seemed to flatten out for a while but has recently seen the case numbers 
 
 We take the top countries by per million death counts and plot the evolution of total deaths in the country over time
 
-```python
-top_evo_death = df.copy()
-top_deaths_country_names = top_deaths_per_m['location'].values
-
-
-top_evo_death.set_index('location', inplace = True)
-top_evo_death = top_evo_death.loc[top_deaths_country_names]
-top_evo_death = top_evo_death.reset_index()
-
-# create the matplotlib figure instance
-fig, ax = plt.subplots(figsize=(18, 9))
-
-# plot with seaborn
-ax = sns.lineplot(x='date', y='total_deaths', hue='location', data=top_evo_death, palette='colorblind');
-ax.set_title('COVID-19 - Total of deaths per country', fontsize=14)
-ax.set_xlabel('Date')
-ax.set_ylabel('Number of deaths')
-
-plt.tight_layout()
-plt.savefig('graph_death_evo.png')
-```
-
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/graph_death_evo.png)
 
 
@@ -488,50 +358,9 @@ plt.savefig('graph_death_evo.png')
 Brazil has been something of an exception to most countries in the world. President Bolsonero is not a fan of lockdowns and the policy in Brazil was much more relaxed than
 most countries around the globe. Borders reopened around July and tourism has been allowed since that time.
 
-
-```python
-# Data for just Brazil
-df_brazil = df.loc[df['location'] == 'Brazil'].copy()
-df_brazil.set_index('date', inplace=True)
-```
-
-When did Brazil record its first case and first death?
-
-```
-first_case_br = df_brazil.loc[df_brazil['total_cases'] == 1, ['total_cases']].sort_values(by='date').head(1)
-first_death_br = df_brazil.loc[df_brazil['total_deaths'] == 1, ['total_deaths']].sort_values(by='date').head(1)
-```
-
-Shows us that the first case was on 2020-02-26 and the first death was on 
-2020-03-18 
+Brazil recorded its first case on 2020-02-26 and its first death was on 2020-03-18 
 
 ## Let's check the lag between cases reported and total deaths for Brazil
-
-
-```python
-
-# create the matplotlib figure instance
-fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(17, 7))
-
-# linear scale
-ax[0].plot('total_deaths', data=df_brazil)
-ax[0].plot('total_cases', data=df_brazil)
-ax[0].set_title('Evolution of COVID-19 in Brazil - Linear Scale', fontsize=14)
-ax[0].set_xlabel('Date')
-ax[0].set_ylabel('Number of Cases/Casualties (million)')
-ax[0].legend()
-
-# logarithmic scale
-plt.yscale('log')
-ax[1].plot('total_deaths', data=df_brazil)
-ax[1].plot('total_cases', data=df_brazil)
-ax[1].set_title('Evolution of COVID-19 in Brazil - Logarithmic Scale', fontsize=14)
-ax[1].set_xlabel('Date')
-ax[1].legend()
-
-plt.tight_layout(pad=3.0)
-plt.savefig('brazil_case_death_lag.png')
-```
 
 Since the case numbers are much more than the deaths, the second plot here uses a log scale on the y-axis to better highlight the relation in time between case numbers and deaths.
 
@@ -574,12 +403,6 @@ We filter the dataframe by this 'B1_GA' and 'CQR' measure and also select out ju
 fdf = df[(df['Country'].str.contains('Euro') == False) & (df['SUBJECT'] == 'B1_GA')  & (df['Period'].isin(['Q2-2019', 'Q2-2020'])) &  (df['MEASURE'] == 'CQR')]
 ```
 
-Next set a multi-index on country and period
-
-```python
-fdf = fdf.set_index(['Country', 'Period'])
-```
-
 Next, create a dataframe representing the percentage change per country from Q2 2019 to Q2 2020 of the CQR measured GDP by expenditure
 
 ```python
@@ -596,25 +419,6 @@ ec_df = pd.DataFrame(data, columns=['country', 'gdp_diff_q2']).sort_values(by='g
 
 Finally, plot the bar-chart to visualize the impact per country
 
-```python
-# create the matplotlib figure instance
-fig, ax = plt.subplots(figsize=(18, 18))
-
-# plot with seaborn
-sns.set(font_scale = 1.8)
-
-ax = sns.barplot(x='gdp_diff_q2', y='country', data=ec_df, 
-                  palette='colorblind');
-ax.set_title('COVID-19 - Econonomic impact per country', fontsize=14)
-ax.set_xlabel('GDP Difference Q2 2020 compared to Q2 2019')
-ax.set_ylabel('Country')
-   
-    
-plt.tight_layout()
-plt.savefig('graph_econ_impact.png')
-```
-
-
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/graph_econ_impact.png)
 
 It seems from this measure at least that China and Turkey experienced growth. Ireland and Scandinavian countries suffered less severe impact than other European countries, whereas Spain, Italy and France were very strongly affected. Saudi Arabia also appears to have took a huge economic blow in this quarter. We could speculate that this might be to do with global oil demand falling during global lockdowns. However, we may want to consider other measures of economic impact to be sure.
@@ -625,156 +429,94 @@ Sweden also drew fire for its approach to handling Covid-19. The country had a m
 
 Let's see what the data can tell us so far about how Covid is affecting Sweden vs the rest of Scandinavia.
 
-First, define the countries we want to look at and filter the dataframe to only include these countries
-
-```python
-scandi_names = ['Sweden', 'Denmark', 'Norway', 'Finland']
-scandi_df = ec_df[ec_df['country'].isin(scandi_names)].sort_values(by='gdp_diff_q2', ascending=False)
-```
 ## Economy
 
 Looking at the economic impact (as defined by the same measure previously) in Scandinavian countries in particular:
 
-```python
-# create the matplotlib figure instance
-fig, ax = plt.subplots(figsize=(9, 5))
-
-ax = sns.barplot(x='gdp_diff_q2', y='country', data=scandi_df, 
-                  palette='colorblind');
-ax.set_title('COVID-19 - Econonomic impact in Scandinavia', fontsize=14)
-ax.set_xlabel('GDP Diff')
-ax.set_ylabel('Country')
-   
-    
-plt.tight_layout()
-plt.savefig('scandi_econ_impact.png')
-```
-
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/scandi_econ_impact.png)
+
+We see that Sweden is faring quite well, but it's still suffered more economic impact than Finland.
 
 ## Total cases per million
 
 Here we compare the evolution of the number of cases per million between Scandinavian countries
 
-```python
-scandi_cases = df.copy()
-scandi_cases.set_index('location', inplace = True)
-scandi_cases = scandi_cases.loc[scandi_names]
-scandi_cases = scandi_cases.reset_index()
-
-# create the matplotlib figure instance
-fig, ax = plt.subplots(figsize=(18, 9))
-
-# plot with seaborn
-ax = sns.lineplot(x='date', y='total_cases_per_million', hue='location', data=scandi_cases, 
-                  palette='colorblind');
-ax.set_title('COVID-19 - Total of cases per million per Scandi country', fontsize=14)
-ax.set_xlabel('Date')
-ax.set_ylabel('Number of Cases per million')
-
-plt.tight_layout()
-plt.savefig('scandi_per_million.png')
-```
-
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/scandi_per_million.png)
 
-It seems that Sweden is fairing the worst out of its neighbours, even when accounting for population differences. Its neighbours seemed to flatten more after the 1st wave, however now all of these countries seem to be in the midst of raising cases in the second wave.
+It seems that Sweden is faring the worst out of its neighbours, even when accounting for population differences. Its neighbours seemed to flatten more after the 1st wave, however now all of these countries seem to be in the midst of raising cases in the second wave.
 
 ## Deaths per million
 
 If we also look at the death count per million
 
-```python
-scandi_deaths = df.copy()
-scandi_deaths.set_index('location', inplace = True)
-scandi_deaths = scandi_deaths.loc[scandi_names]
-scandi_deaths = scandi_deaths.reset_index()
-
-# create the matplotlib figure instance
-fig, ax = plt.subplots(figsize=(18, 9))
-
-# plot with seaborn
-ax = sns.lineplot(x='date', y='total_deaths_per_million', hue='location', data=scandi_cases, 
-                  palette='colorblind');
-ax.set_title('COVID-19 - Total of deaths per million per Scandi country', fontsize=14)
-ax.set_xlabel('Date')
-ax.set_ylabel('Number of deaths per million')
-
-plt.tight_layout()
-plt.savefig('scandi_deaths.png')
-```
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/scandi_deaths.png)
 
-Sweden also seems to be doing worse on this metric than its neighbours.
+Sweden also seems to be doing worse on this metric than its neighbours. 
 
 # UK lockdowns
-
-Focussing on the UK
-
-```python
-# Data for just Brazil
-df_uk = df.loc[df['location'] == 'United Kingdom'].copy()
-df_uk.set_index('date', inplace=True)
-```
 
 The UK went into its first national lockdown on 23 March 2020, and the second lockdown began on the 5 Nov 2020.
 
 In this section we will take a look at what impact if any these lockdowns had on the rising daily case numbers.
 
-
-```python
-# create the matplotlib figure instance
-fig, ax = plt.subplots(figsize=(18, 9))
-
-# plot with seaborn
-ax = sns.lineplot(x='date', y='new_deaths_smoothed', data=df_uk.loc['2020-02-25':'2020-05-30'], 
-                  palette='colorblind');
-ax.set_title('COVID-19 - New deaths per day UK (smoothed)', fontsize=14)
-ax.set_xlabel('Date')
-ax.set_ylabel('Number of new deaths per day')
-
-# Date of 1st UK lockdown
-ax.axvline(pd.to_datetime('2020-03-23'), color='r', linestyle='--', lw=2)
-
-plt.savefig('uk_lockdowns_1st_deaths.png')
-```
-
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/uk_lockdowns_1st_deaths.png)
 
-It seems that in March, after the first lockdown, it took around 3 weeks to see and cessation in the raise of daily new deaths.
+It seems that in March, after the first lockdown, it took around 3 weeks to see a cessation in the raise of daily new deaths.
 
-After the 2nd lockdown
+As for the 2nd lockdown:
 
-```python
-# create the matplotlib figure instance
-fig, ax = plt.subplots(figsize=(18, 9))
-
-# plot with seaborn
-ax = sns.lineplot(x='date', y='new_deaths_smoothed', data=df_uk.loc['2020-10-15':'2020-11-17'], 
-                  palette='colorblind');
-ax.set_title('COVID-19 - New deaths per day UK (smoothed)', fontsize=14)
-ax.set_xlabel('Date')
-ax.set_ylabel('Number of cases per day')
-
-# Date of the 2nd UK lockdown
-ax.axvline(pd.to_datetime('2020-11-05'), color='r', linestyle='--', lw=2)
-
-plt.savefig('uk_lockdowns_2_deaths.png')
-```
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/uk_lockdowns_2_deaths.png)
 
-We seem yet to have seen a slow down in the rise of number of daily deaths since the lockdown began on 5 Nov.
+we seem yet to have seen a slow down in the rise of daily deaths since the lockdown began on 5 Nov.
 
-# Conclusion
+# Results evaluation and conclusion
 
-In this blog post, we've analysed two Covid datasets. We've seen which countries are most affected by Covid in terms of case numbers, death counts and GDP reduction.
 
-We've considered the time series evolution of Covid and how spread rapidly during the 1st wave, slowed somewhat and then in many countries is now rising again in a 2nd wave.
+## Countries most affected
 
-We also zoomed in to consider how countries like Sweden and Brazil, who adopted radically different approaches to tackling the pandemic, have faired.
+The US has the most cases followed by India and then Brazil. In Europe, France and then the UK have the most cases.
 
-Finally, we zoomed in on the UK to consider what impact the strict lockdowns had on the rise of daily death counts.
+Given that it is unfair to compare a country with a huge population to one with a small population we next looked at the case count per million people. The results were that the US still had the most cases per million, followed by France and then Argentina. In fact 6 out of the top 10 countries measured in terms of cases per million were in the Americas. In Europe, France, the Netherlands, Portugal and the UK were in the top 10.
+
+Cases aren't often the whole story as the number of cases recorded is bound to be reflective of the number of tests done. President Trump often repeated the line that the case numbers in the US were only so high because it was leading the world in testing.  We saw however that the US also came out number one in terms of total deaths. However again considering the US has a large population, maybe we should take that into account and look at the deaths per million?
+
+Looking at the deaths per million indeed showed the US in a much more favourable light. The US dropped to number 7 when ranked this way. Argentina, Brazil and Chile were the top 3 countries when viewed in terms of the number of deaths per million.
+
+We also found that 67% of wordwide Covid-19 deaths came from the top 10 (by total deaths) countries 
+
+
+## What countries did the most testing?
+
+Was President Trump correct to say that the US leads the world in testing? It seems the answer is indeed 'yes'. The US had performed over 500 tests per thousand of population. The UK, Russia and Belgium followed.
+
+## The Rise of Covid
+
+Covid cases started to shoot up exponentially around mid-march (at least in terms of recorded cases). The US has led the way in terms of total cases for a long time. Most of the time Brazil followed in second place, but in early September India overtook Brazil to have the 2nd most Covid cases.
+
+In terms of total deaths we saw a similar story. The US leading with little sign of flattening, however Brazil was firmly in the number 2 spot and India has yet did not overtake Brazil in terms of total deaths. The UK did flatten its curved in May and the number of deaths remained constant more or less for many months until around November were a second wave rise seems to be taking place.
+
+Once again we have to take into account the different size of countries, and plotting the total deaths per million over time reveals an interesting story. Argentina comes out in the top place currently, but was very late to the party. Argentina initially had a very strict lockdown but it was lifted late July and it seems the death rate has soared since.
+
+
+## The impact of lockdowns on increasing death rates 
+
+To answer this question, the UK was focussed on as a case study.  Plots of the daily death new death counts were produced that clearly showed the first and second wave. The first lockdown in the UK on the 23 of March seemed to have taken 2-3 weeks to slow down the increase in daily deaths, and the second lockdown introduced on the 5 Nov still does not seem to have had an effect.
+
+## Cases to deaths lags
+
+Brazil was studied to answer this question, and with the help of a log scale plot it was seen that the death count seemed to lag behind the case count by approximately 2 weeks.
+
+## Economic impact
+
+To measure the impact Covid had on the economies around the world, we looked at the shrinkage of the Q2 2020 GDP compared to the Q2 2019 GDP.  China and Turkey seemed to be not suffer at all and even experienced some growth. Unsurprisingly, perhaps countries known to be hit hardest and earliest like Spain, Italy, France in Europe took a hit in that quarter. It seems also that Saudi Arabia 
+suffered economically. Could this be to lockdowns reducing the demand for oil? or is it just some artefact of the measure being used here to quantify the economic impact?
+
+## Sweden vs its neighbours
+
+Sweden had a much less stringent lockdown that its neighbours. Let's see in more detail how it fared in economic terms and also how covid progressed there. Its economy  fared better than that of Denmark and Norway but not as well as that of Finland. However, its cases and deaths (even per million) were much greater than other Scandinavian countries.
+
+
 
 
