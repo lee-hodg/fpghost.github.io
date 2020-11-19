@@ -44,7 +44,7 @@ To kick-off this analysis, let's look at which countries around the world seem t
 
 The first metric I will use to answer that question is the total case number per country.
 
-![alt]({{ site.url }}{{ site.baseurl }}/assets/images/cov_top_cases.png)
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/covid_top_cases.png)
 
 The US has the highest number of cases in the world with over 11 million on the 17th Nov 2020, followed by India with almost 9M, and then Brazil with almost 6M.
 
