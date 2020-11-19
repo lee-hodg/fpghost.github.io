@@ -28,7 +28,7 @@ I will attempt to answer:
 
 - Which countries were most affected by Covid-19 (In terms of total case numbers and total death counts)?
 - What percentage of worldwide cases is accounted for by the top 10 countries by case numbers?
-- If we account for population size of a country by looking at cases/deaths per million of the population, which countries were most affected?
+- If we account for the population size of a country by looking at cases/deaths per million of the population, which countries were most affected?
 - Which countries did the most testing for Covid 19?
 - How did the rise of Covid look? Does it come in waves?
 - How did lockdowns, in particular the UK lockdown, affect the rise in new deaths? How long did it take for the daily death rates to slow down after the UK lockdowns?
@@ -277,7 +277,7 @@ One other thing we can look at is the proportion of the worldwide deaths came fr
 ## Testing per thousand
 
 Case numbers are bound to increase the more tests that are done by a country. Let's check out countries by how many tests per thousand of the population have been carried out. 
-Was President Trump correct to assert that the US leads to world in terms of Covid testing done?
+Was President Trump correct to assert that the US leads the world in terms of Covid testing done?
 
 Again we will filter out countries with populations less than 10M, and since the testing columns often have null data we need to be careful to select only rows with non-nulls for this column:
 
@@ -484,7 +484,7 @@ Cases aren't often the whole story as the number of cases recorded is bound to b
 
 Looking at the deaths per million indeed showed the US in a much more favourable light. The US dropped to number 7 when ranked this way. Argentina, Brazil and Chile were the top 3 countries when viewed in terms of the number of deaths per million.
 
-We also found that 67% of wordwide Covid-19 deaths came from the top 10 (by total deaths) countries 
+We also found that 67% of the world's Covid-19 deaths came from the top 10 (by total deaths) countries 
 
 
 ## What countries did the most testing?
