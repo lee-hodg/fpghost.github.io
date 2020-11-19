@@ -225,7 +225,7 @@ Covid cases started to shoot up exponentially around mid-march (at least in term
 
 In terms of total deaths we saw a similar story. The US leading with little sign of flattening, however Brazil was firmly in the number 2 spot and India has yet did not overtake Brazil in terms of total deaths. The UK did flatten its curved in May and the number of deaths remained constant more or less for many months until around November were a second wave rise seems to be taking place.
 
-Once again we have to take into account the different size of countries, and plotting the total deaths per million over time reveals an interesting story. Argentina comes out in the top place currently, but was very late to the party. Argentina initially had a very strict lockdown but it was lifted late July and it seems the death rate has soared since.
+Once again we have to take into account the different size of countries, and plotting the total deaths per million over time reveals an interesting story. Argentina comes high in the toranking currently, but was very late to the party. Argentina initially had a very strict lockdown but it was lifted late July and it seems the death rate has soared since.
 
 
 ## The impact of lockdowns on increasing death rates 
