@@ -26,7 +26,7 @@ The data was obtained from [Our World In Data](https://ourworldindata.org/corona
 
 - Which countries were most affected by Covid-19?
 - What percentage of worldwide cases is accounted for by the top 10 countries?
-- Which countries were most affected accounting for differeing population sizes?
+- Which countries were most affected accounting for differing population sizes?
 - Which countries did the most testing for Covid 19?
 - How did the rise of Covid look? 
 - How did lockdowns, in particular the UK lockdown, affect the rise in new deaths? 
