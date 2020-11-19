@@ -64,7 +64,7 @@ It can be observed that the US still leads the way in terms of cases recorded, e
 
 ## By deaths per million
 
-Similarly, let's try to measure the impact of Covid-19 on a country by considering the death rate per million. This is important as the number of cases is not the whole story. For example if a country does much more testing than another country then we may expect them to have recorded more tests too.
+Similarly, let's try to measure the impact of Covid-19 on a country by considering the death rate per million. This is important as the number of cases is not the whole story. For example if a country does much more testing than another country then we may expect them to have recorded more cases too.
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/covid_deaths_per_million.png)
 
