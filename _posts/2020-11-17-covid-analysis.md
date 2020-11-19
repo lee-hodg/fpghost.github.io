@@ -42,13 +42,13 @@ To kick-off this analysis, let's look at which countries around the world seem t
 
 ## By total cases
 
-The first metric we will use to answer that question is the total case numbers per country.
+The first metric I will use to answer that question is the total case number per country.
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/cov_graph1.png)
 
 The US has the highest number of cases in the world with over 11 million on the 17th Nov 2020, followed by India with almost 9M, and then Brazil with almost 6M.
 
-We can also compute that there are  55,154,651 worldwide cases. 
+It can also be computed that there are  55,154,651 worldwide cases. 
 
 ## Total cases per million
 
@@ -56,9 +56,11 @@ The previous plot was interesting, but if a country has a much greater populatio
 
 For that reason, let's look at the total cases per million of the population.
 
-Also given that some countries (such as Aruba) have utterly tiny populations per capita case numbers may not be so meaningful for them, so we filter out any countries with a population smaller than 10M. 
+Given that some countries (such as Aruba) have utterly tiny populations, per capita case numbers may not be so meaningful for them, so we filter out any countries with a population smaller than 10M. 
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/covid_cases_per_million.png)
+
+It can be observed that the US still leads the way in terms of cases recorded, even when accounting for its large population.
 
 ## By deaths per million
 
@@ -66,21 +68,25 @@ Similarly, let's try to measure the impact of Covid-19 on a country by consideri
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/covid_deaths_per_million.png)
 
-One other thing we can look at is the proportion of the worldwide deaths that came from the top ten countries by death count: We have 1,328,537.0 worldwide deaths from of COVID on 2020-11-17. And  67.63% came from the 10 countries.
+This graph is interesting and we see that in terms of deaths per million the US is no longer in the top 10. Belgium is the worst affected, followed by Peru. 
+
+Peru is interesting as it implemented one of the strictest and earliest lockdowns in Latin America. It's somewhat surprising that it would have one of the highest deaths per million.
+
+One other thing we can look at is the proportion of the worldwide deaths that came from the top ten countries by death count: We have 1,328,537.0 worldwide deaths from COVID on 2020-11-17 and  67.63% came from the 10 countries.
 
 
 ## Testing per thousand
 
 Case numbers are bound to increase the more tests that are done by a country. Let's check out countries by how many tests per thousand of the population have been carried out.
 
-Was President Trump correct to assert that the US leads the world in terms of Covid testing done?
+Was President Trump correct to assert that the US leads the world in terms of Covid testing done? 
 
-Again we will filter out countries with populations less than 10M. Further more, each country may have recorded the latest data for this statistic on slightly different days, so the analysis takes the most recent date.
+Again we will filter out countries with populations less than 10M. Moreover, each country may have recorded the latest data for this statistic on slightly different days, so the analysis takes the most recent date.
 
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/covid_tests_per_thousand.png)
 
-We see that the US is leading the way in tests performed per 1000 people, so it shouldn't be that surprising that their case numbers are higher too. This may partly explain why the US has the highest per million case count but not the highest per million death rate.
+We see that the US is leading the way in tests performed per 1000 people, so it shouldn't be that surprising that their case numbers are higher too. This may partly explain why the US has the highest per million case count but doesn't appear in the top 10 in terms of per million death rate.
 
 
 # The increase in Covid 
@@ -89,7 +95,7 @@ We see that the US is leading the way in tests performed per 1000 people, so it 
 
 We can get an idea of the speed covid spread per country by plotting the time series of the case count. To keep the charts uncluttered we will do this for just the 5 countries with the most cases
 
-![alt]({{ site.url }}{{ site.baseurl }}/assets/images/cov_evo_cases.png)
+![alt]({{ site.url }}{{ site.baseurl }}/assets/images/covid_evo_cases.png)
 
 The number of cases starting increasing around mid to late March for the US, with upticks around July and again in October, showing no sign of levelling off.
 
