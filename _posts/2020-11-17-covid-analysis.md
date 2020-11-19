@@ -93,7 +93,7 @@ We see that the US is leading the way in tests performed per 1000 people, so it 
 
 ## Evolution in terms of case numbers
 
-We can get an idea of the speed covid spread per country by plotting the time series of the case count. To keep the charts uncluttered we will do this for just the 5 countries with the most cases
+We can get an idea of the speed covid spread per country by plotting the time series of the case count. To keep the charts uncluttered I will do this for just the 5 countries with the most cases.
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/covid_evo_cases.png)
 
@@ -101,18 +101,25 @@ The number of cases starting increasing around mid to late March for the US, wit
 
 For a long time, Brazil, was the country with the second-highest number of cases until it was overtaken by India in early September. 
 
-The UK seemed to flatten out for a while but has recently seen the case numbers begin to rise again.
+France seemed to flatten out for a while but has recently seen the case numbers begin to rise again.
 
-## Evolution in terms of death counts
+## Evolution in terms of death counts per million
 
 We take the top countries by per million death counts and plot the evolution of total deaths in the country over time
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/covid_evo_deaths_per_million.png)
 
+This graph shows Belgium having the highest death counts per million, and despite flattening their curve in May, they entered a second wave around October.
+
+Peru is the next most affected and has seen a fairly steady increase in deaths per million. There are some odd sharp jumps in death counts, most likely to do with the way the data was collected (entering big batches of deaths to the system after delay all at once).
+
+Spain has also been very badly affected and just like Belgium has entered into a second wave as the European winter begins.
+
+Argentina seems to be a late bloomer. Despite their initial hard and strict lockdowns, it seems since around August the death rate per million has exploded there.
 
 # A closer look at Brazil
 
-Brazil has been something of an exception to most countries in the world. President Bolsonero is not a fan of lockdowns and the policy in Brazil was much more relaxed than
+Brazil has been something of an exception to most countries in the world. President Bolsonaro is not a fan of lockdowns and the policy in Brazil was much more relaxed than
 most countries around the globe. Borders reopened around July and tourism has been allowed since that time.
 
 Brazil recorded its first case on 2020-02-26 and its first death was on 2020-03-18 
