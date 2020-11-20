@@ -31,7 +31,7 @@ This can be done simply by running
 jupyter notebook password
 ```
 
-The password hash will be stored in the in the notebook config at `.jupyter/jupyter_notebook_config.json`
+The password hash will be stored in the notebook config at `.jupyter/jupyter_notebook_config.json`
 
 # Ensure the notebook is publically accessible
 
@@ -81,7 +81,7 @@ Now you will be able to SSH into your server simply by typing
 
 # Letsencrypt certificates and Jupyter
 
-With the domain setup, I used letsenrypt to setup an SSL certificate.
+With the domain setup, I used letsencrypt to setup an SSL certificate.
 
 ## Installing certbot on Amazon Linux 2
 
@@ -160,7 +160,7 @@ so it looks like
 # Linux Service
 
 
-I would like the Jupyter Notebook to be ran as a service, so that it can run in the background and without me having to SSH into the server to manually run it (just like Nginx or Apache do)
+I would like the Jupyter Notebook to be ran as a service so that it can run in the background (without me having to SSH into the server to manually run it) Think Nginx or Apache.
 
 First I created a `jupyter.service` file:
 
