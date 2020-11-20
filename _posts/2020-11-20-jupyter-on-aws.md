@@ -1,6 +1,6 @@
 ---
 title: "Setting up a Jupyter Notebook on AWS"
-date: 2020-11-20:12:00:00
+date: 2020-11-20T14:03:00
 categories:
   - blog
 tags:
