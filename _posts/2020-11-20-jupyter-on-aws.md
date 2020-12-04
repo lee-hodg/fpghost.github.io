@@ -1,5 +1,5 @@
 ---
-title: "Setting up a Jupyter Notebook on AWS"
+title: "Setting up a public Jupyter Notebook on AWS"
 date: 2020-11-20T14:03:00
 categories:
   - blog
