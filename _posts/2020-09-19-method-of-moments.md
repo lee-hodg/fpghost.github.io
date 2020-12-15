@@ -9,6 +9,7 @@ toc: true
 toc_sticky: true
 header:
   image: /assets/images/moments.png
+  teaser: "/assets/images/mom_teaser.png"
 ---
 
 
