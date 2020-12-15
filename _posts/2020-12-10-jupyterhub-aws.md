@@ -68,7 +68,7 @@ Now you will see the secure padlock if you visit your Jupyterhub.
 Jupyter lab is the more modern counterpart of the Jupyter notebook. If you would like to run this interface by default
 TLJH also has a [guide](https://tljh.jupyter.org/en/latest/howto/env/notebook-interfaces.html). 
 
-After logging in with the admin user (or via SSH to the EC2 instance) open a new terminal and run
+After logging in with the admin user(or via SSH to the EC2 instance) open up a new terminal and run
 
 ```bash
 sudo tljh-config set user_environment.default_app jupyterlab
@@ -143,7 +143,7 @@ If you do want to switch back authentication so that it uses the `FirstUseAuthen
 sudo tljh-config set auth.type firstuseauthenticator.FirstUseAuthenticator
 ```
 
-and thenclean up the `config.yaml` so all that remains is
+and then clean up the `config.yaml` so all that remains is
 
 ```yaml
 auth:
