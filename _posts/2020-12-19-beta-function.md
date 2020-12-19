@@ -158,5 +158,44 @@ $$
 &=\frac{(\alpha+\beta-1)!}{(\alpha+m+\beta-1)!}\times  \frac{(\alpha+m-1)!}{(\alpha-1)!}\\
 &=\frac{(\alpha+m-1)!\dots(\alpha+1)\alpha}{(\alpha+m+\beta-1)\dots(\alpha+\beta+1)(\alpha+\beta)}
 \end{aligned}
+$$
+
+# Bernoulli experiment with a Beta prior
+
+In the Bayesian framework, let's say we have some prior belief about the edge of a coin. Maybe we think it's most likely to be somewhere around $1/2$ and less likely to be $0$ or $1$. We treat the parameter $p$ **as if** it were a random variable, and in a Bernoulli experiment like this, a Beta distribution would be a common prior to to choose:
 
 $$
+p \sim \text{Beta}(a, a)
+$$
+
+and
+
+$$
+\pi(p) \propto p^{a-1}(1-p)^{a-1}\, p\in (0,1)
+$$
+
+We don't care about the normalization constant, since it does not depend on $p$, and later when we obtain the posterior distribution, we will just calculate the normalization constant by ensuring the probability sums to one anyway.
+
+Now given some $p$, our observations are random variables that follow $X_1, \dots, X_n \stackrel{iid}{\sim} \text{Ber}(p)$, so that the likelihood is
+
+$$
+L_n(X_1, \dots, X_n|p)=p^{\sum^n_{i=1}\mathbb{X_i}}(1-p)^{n-\sum^n_{i=1}\mathbb{X_i}}
+$$
+
+where here $\mathbb{X_i} = \mathbb{1}(X_i=1)$, i.e. the indicator that is $1$ when we observe heads and $0$ when we observe tails. If we were doing frequentist statistics we would now do something like take the log-likelihood and differentiate to get the maximum-likelihood estimator (MLE), which in this case would tell us $p^{\text{MLE}}=\bar{X_n}$.
+
+But in Bayesian statistics, we want to get the distribution of the parameter given the data (the posterior) from the distribution of the data given the parameter (the likelihood) and the prior distribution. 
+
+ Bayes' law tells us that up to a normalization constant that does not depend on the parameter, we obtain the posterior distribution by just multiplying together the prior and the likelihood:
+
+ $$
+ \begin{aligned}
+ \pi(p|X_1, \dots, X_n) &\propto L_n(X_1, \dots, X_n|p)\times \pi(p) \\
+ &=p^{\sum^n_{i=1}\mathbb{X_i}}(1-p)^{n-\sum^n_{i=1}\mathbb{X_i}}p^{a-1}(1-p)^{a-1}\\
+ &=p^{a+\sum^n_{i=1}\mathbb{X_i}-1}(1-p)^{a+n-\sum^n_{i=1}\mathbb{X_i}-1}\\
+ &=\text{Beta}(a+\sum^n_{i=1}\mathbb{X_i}, a+n-\sum^n_{i=1}\mathbb{X_i})
+ \end{aligned}
+ $$
+
+
+Note that we started with a Beta-prior and we got a Beta-posterior. These are known as **conjugate distributions**.
