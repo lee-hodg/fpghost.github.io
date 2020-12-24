@@ -6,7 +6,7 @@ categories:
 tags:
   - AWS
 header:
-  image: /assets/images/imgproxy.jpeg
+  image: /assets/images/imgproxy.jpg
   teaser: "/assets/images/imgproxy_teaser.jpeg"
 ---
 
