@@ -162,7 +162,7 @@ $$
 
 # Bernoulli experiment with a Beta prior
 
-In the Bayesian framework, let's say we have some prior belief about the edge of a coin. Maybe we think it's most likely to be somewhere around $1/2$ and less likely to be $0$ or $1$. We treat the parameter $p$ **as if** it were a random variable, and in a Bernoulli experiment like this, a Beta distribution would be a common prior to to choose:
+In the Bayesian framework, let's say we have some prior belief about the edge of a coin. Maybe we think it's most likely to be somewhere around $1/2$ and less likely to be $0$ or $1$. We treat the parameter $p$ **as if** it were a random variable, and in a Bernoulli experiment like this, a Beta distribution would be a common prior to choose:
 
 $$
 p \sim \text{Beta}(a, a)

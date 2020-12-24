@@ -68,7 +68,7 @@ Now `https://imgproxy.mycompany.com` should greet you with the
 
 # Signing
 
-Imgproxy provides [examples](https://github.com/imgproxy/imgproxy/blob/master/examples/signature.py) on how to generate the signed url from the salt and key:
+Imgproxy provides [examples](https://github.com/imgproxy/imgproxy/blob/master/examples/signature.py) on how to generate the signed URL from the salt and key:
 
 ```python
 import base64
