@@ -1,13 +1,13 @@
 ---
-title: "Useful Pandas Snippets"
-date: 2020-12-29T07:19:00
+title: "A/B Tests and Experiment Size"
+date: 2021-01-09T21:56:00
 categories:
   - Blog
 tags:
   - Data science
 header:
-  image: /assets/images/imgproxy.jpg
-  teaser: "/assets/images/imgproxy_teaser.jpeg"
+  image: /assets/images/ab-testing-banner.jpg
+  teaser: "/assets/images/ab-thumb.jpg"
 ---
 
 Let's say you're running an A/B test. Maybe you want to test how many conversions you will get if you change the design of the Signup page or the wording. You split users landing on your site into 2 groups - the control group and the experimental group. Those in the control group see the existing site and those in the experimental group see the new design. Practically you could do this by setting a cookie or otherwise.
