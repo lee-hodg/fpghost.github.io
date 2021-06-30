@@ -38,6 +38,16 @@ I set the environment variables to configure s3 access and signing as follows
 
 Also the salt and key can be generated with `echo $(xxd -g 2 -l 64 -p /dev/random | tr -d '\n')`.
 
+It was also useful to adjust the following environment variables from their defaults:
+
+```
+IMGPROXY_READ_TIMEOUT 30 (10 def)
+IMGPROXY_DOWNLOAD_TIMEOUT 30 (10 def)
+IMGPROXY_TTL 86400 (def 3600)
+IMGPROXY_MAX_SRC_RESOLUTION  160  (def 16.8)
+```
+
+
 ## The service
 
 ![alt]({{ site.url }}{{ site.baseurl }}/assets/images/imgproxy3.png)
