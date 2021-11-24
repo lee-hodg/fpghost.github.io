@@ -29,5 +29,5 @@ $$
 Recall we want the argmax over $p$ of this function, but since the logarithm is monatonically increasing this amounts to the same as finding the max over the log-likelihood
 
 $$
-\mathcal{l} = \log{(L(x_1, \dots, x_n; p))} = \sum_{i=1}^{n} x_i \log{(p)} + (n-\sum_{i=1}^{n} x_i)\log({1-p})
+\mathcal{l} = \log{L(x_1, \dots, x_n; p)} = \left(\sum_{i=1}^{n} x_i\right) \log{p} + \left(n-\sum_{i=1}^{n} x_i\right)\log({1-p})
 $$
