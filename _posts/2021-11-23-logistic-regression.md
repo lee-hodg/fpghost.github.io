@@ -20,6 +20,8 @@ whereb $a$ is the predicted value and $y$ is the ground-truth label on the train
 Why this function? The intuitive version is that if $y=1$ the second term goes away, and the first
 term that remains is small when $a\to 1$ (i.e. the predicted value approaches the correct ground truth), yet large when $a\to 0$ (i.e. we are punished with a large cost when the predicted answer goes away from the ground truth). Similarly for the other term.
 
+## Stats aside
+
 However, the more mathemtically rigorous answer is that this function comes from the MLE (Maximum Likelihood Estimator). Recall that if we have a Bernoulli model, then we can write
 
 $$
@@ -48,3 +50,13 @@ $$
 
 and we not that finding the maxima of this function is equivalent to finding the minima of the negative. With a small change of notation, we see the negative is exactly our usual logistic regression cost function.
 
+## Back to ML
+
+### Backprop
+
+We will need to know how our cost-function varies as our network weights vary.
+To that end let's compute a few things
+
+$$
+\frac{\partial\mathcal{L}}{\partial a} = -frac{y}{a}+\frac{(1-y)}{(1-a)}
+$$
