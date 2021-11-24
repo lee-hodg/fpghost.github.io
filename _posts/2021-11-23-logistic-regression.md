@@ -58,5 +58,21 @@ We will need to know how our cost-function varies as our network weights vary.
 To that end let's compute a few things
 
 $$
-\frac{\partial\mathcal{L}}{\partial a} = -frac{y}{a}+\frac{(1-y)}{(1-a)}
+\frac{\partial\mathcal{L}}{\partial a} = -\frac{y}{a}+\frac{(1-y)}{(1-a)}
+$$
+
+Then we also used the sigmoid activation function
+
+$$
+a = \sigma(z) = \frac{1}{1+e^{-z}}
+$$
+
+meaning
+
+$$
+\begin{aligned}
+\frac{da}{dz} &= \frac{e^{-z}}{(1+e^{-z})^2} \\
+&=\frac{1}{1+e^{-z}}\frac{1+e^{-z}-1}{1+e^{-z}} \\
+&=a(1-a) \\
+\end{aligned}
 $$
