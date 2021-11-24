@@ -76,3 +76,14 @@ $$
 &=a(1-a) \\
 \end{aligned}
 $$
+
+Now we can simply use the chain rule to get the dependence on $z$:
+
+$$
+\begin{aligned}
+\frac{d\mathcal{L}}{dz} &= \frac{\partial \mathcal{L}}{\partial a}\frac{\partial a}{\partial z} \\
+&=a(1-a)\left[-\frac{y}{a}+\frac{(1-y)}{(1-a)}\right] \\
+&= -y(1-a) + a(1-y) \\
+&= a-y
+\end{aligned}
+$$
