@@ -31,3 +31,20 @@ Recall we want the argmax over $p$ of this function, but since the logarithm is 
 $$
 \mathcal{l} = \log{L(x_1, \dots, x_n; p)} = \left(\sum_{i=1}^{n} x_i\right) \log{p} + \left(n-\sum_{i=1}^{n} x_i\right)\log({1-p})
 $$
+
+In regular statistics class, we'd now find the maxima by taking deratives and setting equal to 0.
+This would give us the MLE estimator of our paramter $p$, which not too surprisngly would turn out to be the average
+
+$$
+p^{\text{MLE}} = \frac{1}{n}\sum_{i=1}^n x_i
+$$
+
+
+For a single training example the log-likelihood would be 
+
+$$
+\mathcal{l}_1 =  x \log{p} + \left(1-x\right)\log({1-p})
+$$
+
+and we not that finding the maxima of this function is equivalent to finding the minima of the negative. With a small change of notation, we see the negative is exactly our usual logistic regression cost function.
+
