@@ -87,3 +87,37 @@ $$
 &= a-y
 \end{aligned}
 $$
+
+The final step
+
+Given that $z$ depends on the network's weights $w_1, w_2, b$ and the training features, $x_1, x_2$
+as follows
+
+$$
+z = w_1 x_1 + w_2 x_2 + b
+$$
+
+and 
+
+$$
+\frac{dz}{dw_i} = x_i
+$$
+
+and
+
+$$
+\frac{dz}{db} = 1
+$$
+
+Applying the chain-rule just one more time and we get the final result
+
+$$
+dw_i = frac{d\mathcal{L}}{dw_i} = x_i (a-y)
+$$
+
+and
+
+$$
+db = \frac{d\mathcal{L}}{db} = (a-y)
+$$
+
