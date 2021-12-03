@@ -8,6 +8,9 @@ tags:
   - Statistics
 ---
 
+<img src="/assets/images/cropped_nn.png" alt="Logistic unit" class="full">
+
+
 In simple Logistic Regression, we have the cost function
 
 $$
