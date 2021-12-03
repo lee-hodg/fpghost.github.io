@@ -112,7 +112,7 @@ $$
 Applying the chain-rule just one more time and we get the final result
 
 $$
-dw_i = frac{d\mathcal{L}}{dw_i} = x_i (a-y)
+dw_i = \frac{d\mathcal{L}}{dw_i} = x_i (a-y)
 $$
 
 and
@@ -121,3 +121,16 @@ $$
 db = \frac{d\mathcal{L}}{db} = (a-y)
 $$
 
+## Gradient descent update rule
+
+So to perform gradfient descent we must update our parameters as follows:
+
+$$
+\begin{aligned}
+w_1 & = w_1 - \alpha dw_1 \\
+w_2 & = w_2 - \alpha dw_2 \\
+b & = b - \alpha db \\
+\end{aligned}
+$$
+
+where $\alpha$ is the learning rate and controls the size of the steps we take.
