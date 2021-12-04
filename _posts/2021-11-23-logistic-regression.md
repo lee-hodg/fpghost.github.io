@@ -137,3 +137,15 @@ b & = b - \alpha db \\
 $$
 
 where $\alpha$ is the learning rate and controls the size of the steps we take.
+
+## Vectorizing Logistic Regression
+
+
+So for the i'th training example, the forward step would look like
+
+$$
+\begin{aligned}
+z^{(i)} &= w^{T}x^{(i)} + b\\
+a^{(i)} &= \sigma(z({i}))
+\end{aligned}
+$$
