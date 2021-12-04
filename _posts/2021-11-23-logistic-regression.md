@@ -224,6 +224,7 @@ $$
 expanding this
 
 $$
+\begin{aligned}
 dw &= \frac{1}{m} \begin{pmatrix}
     \vert & \dots & \vert \\
     x^{(1)} & \dots  & x^{(m)}   \\
@@ -234,6 +235,7 @@ dw &= \frac{1}{m} \begin{pmatrix}
     dz^{(m)}
 \end{pmatrix} \\
 & = \frac{1}{m}\left[x^{(1)} dz^{(1)} + \dots + x^{(m)}dz^{(m)}]
+\end{aligned}
 $$
 
 Note that here the resulting $dw$ is an $n\times 1$ vector.
