@@ -149,3 +149,38 @@ z^{(i)} &= w^{T}x^{(i)} + b\\
 a^{(i)} &= \sigma(z({i}))
 \end{aligned}
 $$
+
+so for $m$ training examples we'd traditionally have a for loop iterating over each.
+However this is inefficient.
+
+Consider the design matrix $X$:
+
+$$
+\mathbf{X}=\begin{pmatrix}
+    \vert & \dots & \vert \\
+    x^{(1)} & \dots  & x^{(m)}   \\
+    \vert & \dots & \vert
+\end{pmatrix}
+$$
+
+This is an $n \times m$ matrix, where we have $m$ training examples and $n$ features.
+
+Using this matrix, we can do the forward step over all examples at once
+
+$$
+[z^{(1)}, z^{(2)}, \dots, z^{(m)}] = w^{T} X + [b,b, \dots, b]
+$$
+
+so
+
+$$
+Z = w^{(T)} X + b
+$$
+
+or in code
+
+```python
+# Note: python will broadcast the scalar b 
+Z = np.dot(w.T, X) + b
+```
+
