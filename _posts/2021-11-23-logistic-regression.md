@@ -184,3 +184,77 @@ or in code
 Z = np.dot(w.T, X) + b
 ```
 
+### Gradient computation
+
+$$
+dz^{(i)} = a^{(i)} - y^{(i)}
+$$
+
+and we define the $1\times m$ ector
+
+$$
+dZ = [dz^{(1)}, \dots, dz^{(m)}]
+$$
+
+so vectorizing our computation, and with similar definitions
+for the vectors $A$ and $Y$, we'd have
+
+$$
+dZ = A - Y
+$$
+
+We had
+
+$$
+db = \frac{1}{m} \sum_1^m z^{(i)}
+$$
+
+which translates to
+
+```python
+db = np.sum(dZ)/m
+```
+
+and
+
+$$
+dw = \frac{1}{m} X dZ^{(T)}
+$$
+
+expanding this
+
+$$
+dw &= \frac{1}{m} \begin{pmatrix}
+    \vert & \dots & \vert \\
+    x^{(1)} & \dots  & x^{(m)}   \\
+    \vert & \dots & \vert
+\end{pmatrix} \begin{pmatrix}
+    dz^{(1)} \\
+    \dots  \\
+    dz^{(m)}
+\end{pmatrix} \\
+& = \frac{1}{m}\left[x^{(1)} dz^{(1)} + \dots + x^{(m)}dz^{(m)}]
+$$
+
+Note that here the resulting $dw$ is an $n\times 1$ vector.
+
+In code and altogether
+
+```python
+Z = np.dot(W.T, X) + b
+A = sigma (Z)
+dZ = A - Y
+dw = (1/m) np.dot(X, dZ.T)
+db = 1/m np.sum(dZ)
+```
+
+Then the gradient ascent update goes as
+
+```python
+w = w - alpha dw
+b = b - alpha db
+```
+
+We still need an outer for-loop over all the iterations of gradient
+ascent, but aside that we have vectorized all that is possible.
+
